@@ -62,7 +62,7 @@ Jon Vlachoyiannis, jon@sfalma.com
   
   <target name="jar" depends="compile">
 
-     <delete file="trace.jar" />
+     <delete file="sfalma-trace.jar" />
      <delete file="MANIFEST.MF" />
      <manifest file="MANIFEST.MF">
         <attribute name="Built-By" value="${user.name}" />
@@ -70,7 +70,7 @@ Jon Vlachoyiannis, jon@sfalma.com
                      value="${version.num}"/> 
     </manifest>
 
-    <jar destfile="trace.jar"
+    <jar destfile="sfalma-trace.jar"
          basedir="build/classes"
          includes="**/*.class"
          manifest="MANIFEST.MF"
@@ -80,7 +80,7 @@ Jon Vlachoyiannis, jon@sfalma.com
   <target name="clean">
        <delete dir="build" />
        <delete>
-         <fileset dir="." includes="trace.jar*"/>
+         <fileset dir="." includes="sfalma-trace.jar*"/>
          <fileset file="MANIFEST.MF"/>
        </delete>  
   </target>
