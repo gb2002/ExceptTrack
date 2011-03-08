@@ -85,7 +85,7 @@ public class SfalmaHandler {
 	private static ActivityAsyncTask<Processor, Object, Object, Object> sTask;
 	private static boolean sVerbose = false;
 	private static int sMinDelay = 0;
-	private static Integer sTimeout = null;
+	private static Integer sTimeout = 1;
 	private static boolean sSetupCalled = false;
 
 	public static interface Processor {
