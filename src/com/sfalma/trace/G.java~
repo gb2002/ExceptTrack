@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2011 Sfalma.com
+Copyright (c) 2009 nullwire aps
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
@@ -22,32 +22,26 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
-Contributors:
-Jon Vlachoyiannis
- */
+Contributors: 
+Mads Kristiansen, mads.kristiansen@nullwire.com
+Glen Humphrey
+Evan Charlton
+Peter Hewitt
+*/
 
 package com.nullwire.trace;
 
-import java.io.IOException;
+public class G {
+	// Since the exception handler doesn't have access to the context,
+	// or anything really, the library prepares these values for when
+	// the handler needs them.
+	public static String FILES_PATH 				= null;
+	public static String APP_VERSION 				= "unknown";
+	public static String APP_PACKAGE 				= "unknown";
+	public static String URL						= "http://trace.nullwire.com/collect/";
+	public static String TAG						= "ExceptionHandler";
+	public static String ANDROID_VERSION			= null;
+	public static String PHONE_MODEL				= null;
 
-import org.apache.http.NameValuePair;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public class Sfalma {
-	
-	public static String createJSON(String app_package, String version, String phoneModel, String android_version, String stackTrace) throws Exception {
-		JSONObject json = new JSONObject();
-		
-		json.put("phone_model", phoneModel);
-		json.put("package_version", version);
-		json.put("package_name", app_package);
-		json.put("android_version", android_version);
-		json.put("strace", stackTrace);
-
-		return json.toString();
-	}
-	
+	public static String TraceVersion				= "0.3.0";
 }

@@ -9,3 +9,6 @@ server/site.db
 example/gen/*
 BRANCH_TODO
 build/*
+*~
+\#*
+.\#

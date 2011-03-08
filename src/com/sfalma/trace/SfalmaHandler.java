@@ -27,9 +27,10 @@ Mads Kristiansen, mads.kristiansen@nullwire.com
 Glen Humphrey
 Evan Charlton
 Peter Hewitt
+Jon Vlachoyiannis, jon@sfalma.com
  */
 
-package com.nullwire.trace;
+package com.sfalma.trace;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -60,8 +61,8 @@ import android.util.Log;
 /**
  * Usage:
  *
- * 	    ExceptionHandler.setUrl('http://myserver.com/bugs')
- *      ExceptionHandler.setup(new ExceptionHandler.Processor() {
+ * 	    SfalmaHandler.setUrl('http://myserver.com/bugs')
+ *      SfalmaHandler.setup(new SfalmaHandler.Processor() {
  *          boolean beginSubmit() {
  *          	showDialog(DIALOG_SUBMITTING_CRASH);
  *          	return true;
@@ -75,7 +76,7 @@ import android.util.Log;
  *          void handlerInstalled() {}
  *      });
  */
-public class ExceptionHandler {
+public class SfalmaHandler {
 
 	// Stores loaded stack traces in memory. Each element is
 	// a tuple of (app version, android version, phone model, actual trace).
@@ -474,6 +475,7 @@ public class ExceptionHandler {
 					HttpConnectionParams.setConnectionTimeout(params, sTimeout);
 					HttpConnectionParams.setSoTimeout(params, sTimeout);
 				}
+
 				HttpPost httpPost = new HttpPost(G.URL);
 				/*
 				List <NameValuePair> nvps = new ArrayList <NameValuePair>();
