@@ -29,7 +29,9 @@ Jon Vlachoyiannis
 package com.sfalma.trace;
 
 import java.io.IOException;
-
+import java.security.*;
+import java.math.*;
+ 
 import org.apache.http.NameValuePair;
 
 import org.json.JSONArray;
@@ -66,5 +68,13 @@ public class Sfalma {
 
 		return json.toString();
 	}
+
 	
+    public static String MD5 (String data) throws Exception {
+		MessageDigest m = MessageDigest.getInstance("MD5");
+
+		m.update(data.getBytes(), 0, data.length());
+		return new BigInteger(1, m.digest()).toString(16);
+	}
+
 }

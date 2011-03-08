@@ -61,7 +61,6 @@ import android.util.Log;
 /**
  * Usage:
  *
- * 	    SfalmaHandler.setUrl('http://myserver.com/bugs')
  *      SfalmaHandler.setup(new SfalmaHandler.Processor() {
  *          boolean beginSubmit() {
  *          	showDialog(DIALOG_SUBMITTING_CRASH);
@@ -101,8 +100,10 @@ public class SfalmaHandler {
 	 * @param context
 	 * @param processor
 	 */
-	public static boolean setup(Context context, final Processor processor) {
+	public static boolean setup(Context context, final Processor processor, String apiKey) {
 		// Make sure this is only called once.
+		G.API_KEY = apiKey;	
+
 		if (sSetupCalled) {
 			// Tell the task that it now has a new context.
 			if (sTask != null && !sTask.postProcessingDone()) {
@@ -169,12 +170,12 @@ public class SfalmaHandler {
 	 *
 	 * @param context
 	 */
-	public static boolean setup(Context context) {
+	public static boolean setup(Context context, String apiKey) {
 		return setup(context, new Processor() {
 			public boolean beginSubmit() { return true; }
 			public void submitDone() {}
 			public void handlerInstalled() {}
-		});
+			}, apiKey);
 	}
 
 	/**
@@ -464,12 +465,15 @@ public class SfalmaHandler {
 
 				Log.d(G.TAG, "Transmitting stack trace: " + stacktrace);
 				// Transmit stack trace with POST request
-				DefaultHttpClient  httpClient = new DefaultHttpClient();
+				DefaultHttpClient httpClient = new DefaultHttpClient();
 				HttpParams params = httpClient.getParams();
+
+
 				// Lighty 1.4 has trouble with the expect header
 				// (http://redmine.lighttpd.net/issues/1017), and a
 				// potential workaround is only included in 1.4.21
 				// (http://www.lighttpd.net/2009/2/16/1-4-21-yes-we-can-do-another-release).
+				// : bla
 				HttpProtocolParams.setUseExpectContinue(params, false);
 				if (sTimeout != null) {
 					HttpConnectionParams.setConnectionTimeout(params, sTimeout);
@@ -477,19 +481,13 @@ public class SfalmaHandler {
 				}
 
 				HttpPost httpPost = new HttpPost(G.URL);
-				/*
+				httpPost.addHeader("X-Sfalma-Api-Key", G.API_KEY);
+
 				List <NameValuePair> nvps = new ArrayList <NameValuePair>();
-				nvps.add(new BasicNameValuePair("package_name", G.APP_PACKAGE));
-				nvps.add(new BasicNameValuePair("package_version", version));
-				nvps.add(new BasicNameValuePair("phone_model", phoneModel));
-				nvps.add(new BasicNameValuePair("android_version", androidVersion));
-				nvps.add(new BasicNameValuePair("stacktrace", stacktrace));
-				*/
-				List <NameValuePair> nvps_sfalma = new ArrayList <NameValuePair>();
+				nvps.add(new BasicNameValuePair("data", Sfalma.createJSON(G.APP_PACKAGE, version, phoneModel, androidVersion, stacktrace)));
+				nvps.add(new BasicNameValuePair("hash", Sfalma.MD5(stacktrace)));
 
-				nvps_sfalma.add(new BasicNameValuePair("sfalma", Sfalma.createJSON(G.APP_PACKAGE, version, phoneModel, androidVersion, stacktrace)));
-
-				httpPost.setEntity(new UrlEncodedFormEntity(nvps_sfalma, HTTP.UTF_8));
+				httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 				// We don't care about the response, so we just hope it
 				// went well and on with it.
 				httpClient.execute(httpPost);

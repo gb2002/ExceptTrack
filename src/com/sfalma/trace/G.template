@@ -42,6 +42,7 @@ public class G {
 	public static String TAG						= "SfalmaHandler";
 	public static String ANDROID_VERSION			= null;
 	public static String PHONE_MODEL				= null;
+	public static String API_KEY					= null;
 
 	public static String TraceVersion				= "@__TRACEVERSION__@";
 }
