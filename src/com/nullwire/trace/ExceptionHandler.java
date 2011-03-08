@@ -475,13 +475,19 @@ public class ExceptionHandler {
 					HttpConnectionParams.setSoTimeout(params, sTimeout);
 				}
 				HttpPost httpPost = new HttpPost(G.URL);
+				/*
 				List <NameValuePair> nvps = new ArrayList <NameValuePair>();
 				nvps.add(new BasicNameValuePair("package_name", G.APP_PACKAGE));
 				nvps.add(new BasicNameValuePair("package_version", version));
 				nvps.add(new BasicNameValuePair("phone_model", phoneModel));
 				nvps.add(new BasicNameValuePair("android_version", androidVersion));
 				nvps.add(new BasicNameValuePair("stacktrace", stacktrace));
-				httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
+				*/
+				List <NameValuePair> nvps_sfalma = new ArrayList <NameValuePair>();
+
+				nvps_sfalma.add(new BasicNameValuePair("sfalma", Sfalma.createJSON(G.APP_PACKAGE, version, phoneModel, androidVersion, stacktrace)));
+
+				httpPost.setEntity(new UrlEncodedFormEntity(nvps_sfalma, HTTP.UTF_8));
 				// We don't care about the response, so we just hope it
 				// went well and on with it.
 				httpClient.execute(httpPost);
