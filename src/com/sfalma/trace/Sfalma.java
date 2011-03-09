@@ -34,14 +34,13 @@ import java.math.*;
  
 import org.apache.http.NameValuePair;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Sfalma {
-	
+	// FIXME: Use Gson
 	public static String createJSON(String app_package, String version, String phoneModel, String android_version, String stackTrace) throws Exception {
-		JSONArray json = new JSONArray();
+		JSONObject json = new JSONObject();
 
 		JSONObject request_json = new JSONObject();
 		JSONObject exception_json = new JSONObject();
@@ -49,22 +48,23 @@ public class Sfalma {
 		JSONObject client_json = new JSONObject();
 		
 		request_json.put("remote_ip", "192.168.0.1");
-		json.put(request_json);
+		json.put("request", request_json);
 
 		exception_json.put("occured_at", "today");
 		exception_json.put("message", "java.lang.NullPointerException");
+		exception_json.put("exception_class", "java.lang.NullPointerException");
 		exception_json.put("backtrace", stackTrace);
-		json.put(exception_json);
+		json.put("exception", exception_json);
 		
 		application_json.put("phone_model", phoneModel);
 		application_json.put("package_version", version);
 		application_json.put("package_name", app_package);
 		application_json.put("version", android_version);
-		json.put(application_json);
+		json.put("application_environment", application_json);
 
 		client_json.put("version", "sfalma-version-1");
 		client_json.put("name", "sfalma-android");
-		json.put(client_json);
+		json.put("client", client_json);
 
 		return json.toString();
 	}
