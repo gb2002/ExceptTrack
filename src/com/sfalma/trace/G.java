@@ -39,7 +39,7 @@ public class G {
 	public static String APP_VERSION 				= "unknown";
 	public static String APP_PACKAGE 				= "unknown";
 	//public static String URL						= "http://10.39.255.101:8080/api/send";
-	public static String URL						= "http://192.168.0.1:8000/api/errors";
+	public static String URL						= "http://192.168.0.55:8080/api/errors";
 	public static String TAG						= "SfalmaHandler";
 	public static String ANDROID_VERSION			= null;
 	public static String PHONE_MODEL				= null;

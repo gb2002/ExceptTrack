@@ -57,6 +57,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
+import android.net.NetworkInfo;
+import android.net.ConnectivityManager;
+import android.location.LocationManager;
+import android.location.LocationListener;
+import android.location.Location;
 
 /**
  * Usage:
@@ -128,7 +133,7 @@ public class SfalmaHandler {
 		G.PHONE_MODEL = android.os.Build.MODEL;
 		// Android version
 		G.ANDROID_VERSION = android.os.Build.VERSION.RELEASE;
-		
+
 		// Get information about the Package
 		PackageManager pm = context.getPackageManager();
 		try {
@@ -159,7 +164,7 @@ public class SfalmaHandler {
 		processor.handlerInstalled();
 
 		// Third, submit any traces we may have found
-		return submit(processor);
+		return submit(processor, context);
 	}
 
 	/**
@@ -199,7 +204,7 @@ public class SfalmaHandler {
 	 * might want to manually ask the traces to be submitted, for
 	 * example after asking the user's permission.
 	 */
-	public static boolean submit(final Processor processor) {
+	public static boolean submit(final Processor processor, final Context context) {
 		if (!sSetupCalled)
 			throw new RuntimeException("you need to call setup() first");
 
@@ -237,7 +242,7 @@ public class SfalmaHandler {
 
 					@Override
 					protected Object doInBackground(Object... params) {
-						submitStackTraces(tracesNowSubmitting);
+						submitStackTraces(tracesNowSubmitting, context);
 
 						long rest = sMinDelay - (System.currentTimeMillis() - mTimeStarted);
 						if (rest > 0)
@@ -268,12 +273,12 @@ public class SfalmaHandler {
 	/**
 	 * Version of submit() that doesn't take a processor.
 	 */
-	public static boolean submit() {
+	public static boolean submit(final Context context) {
 		return submit(new Processor() {
 			public boolean beginSubmit() { return true; }
 			public void submitDone() {}
 			public void handlerInstalled() {}
-		});
+			}, context);
 	}
 
 	/**
@@ -451,7 +456,7 @@ public class SfalmaHandler {
 	 * Look into the files folder to see if there are any "*.stacktrace" files.
 	 * If any are present, submit them to the trace server.
 	 */
-	private static void submitStackTraces(ArrayList<String[]> list) {
+	private static void submitStackTraces(ArrayList<String[]> list, final Context context) {
 		try {
 			if (list == null)
 				return;
@@ -484,7 +489,7 @@ public class SfalmaHandler {
 				httpPost.addHeader("X-Sfalma-Api-Key", G.API_KEY);
 
 				List <NameValuePair> nvps = new ArrayList <NameValuePair>();
-				nvps.add(new BasicNameValuePair("data", Sfalma.createJSON(G.APP_PACKAGE, version, phoneModel, androidVersion, stacktrace)));
+				nvps.add(new BasicNameValuePair("data", Sfalma.createJSON(G.APP_PACKAGE, version, phoneModel, androidVersion, stacktrace, isWifiOn(context), isMobileNetworkOn(context), isGPSOn(context))));
 				nvps.add(new BasicNameValuePair("hash", Sfalma.MD5(stacktrace)));
 
 				httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
@@ -508,4 +513,38 @@ public class SfalmaHandler {
 					new DefaultExceptionHandler(currentHandler));
 		}
 	}
+
+	private static boolean CheckNetworkConnection(String typeOfConnection, final Context context) {
+		boolean connected = false;
+
+		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+		for (NetworkInfo ni : netInfo) {
+			if (ni.getTypeName().equalsIgnoreCase(typeOfConnection))
+				if (ni.isConnected())
+					connected = true;
+		}
+		return connected;
+	}
+
+	private static boolean isWifiOn(final Context context) {
+		return CheckNetworkConnection("WIFI", context);
+	}
+
+	private static boolean isMobileNetworkOn(final Context context) {
+		return CheckNetworkConnection("MOBILE", context);
+	}
+
+	private static boolean isGPSOn(final Context context) {
+		boolean gps_status = true;
+
+		LocationManager locManager;
+		locManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);  
+		if (!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){  
+			gps_status = false;
+		}  
+
+		return gps_status;
+	}
+
 }

@@ -38,8 +38,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Sfalma {
+
 	// FIXME: Use Gson
-	public static String createJSON(String app_package, String version, String phoneModel, String android_version, String stackTrace) throws Exception {
+	public static String createJSON(String app_package, String version, String phoneModel, String android_version, String stackTrace, boolean wifi_status, boolean mob_net_status, boolean gps_status) throws Exception {
 		JSONObject json = new JSONObject();
 
 		JSONObject request_json = new JSONObject();
@@ -60,6 +61,9 @@ public class Sfalma {
 		application_json.put("package_version", version);
 		application_json.put("package_name", app_package);
 		application_json.put("version", android_version);
+		application_json.put("wifi_on", wifi_status);
+		application_json.put("mobile_net_on", mob_net_status);
+		application_json.put("gps_on", gps_status);
 		json.put("application_environment", application_json);
 
 		client_json.put("version", "sfalma-version-1");
