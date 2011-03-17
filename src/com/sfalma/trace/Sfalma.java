@@ -42,7 +42,7 @@ import org.json.JSONObject;
 public class Sfalma {
 
 	// FIXME: Use Gson
-	public static String createJSON(String app_package, String version, String phoneModel, String android_version, String stackTrace, boolean wifi_status, boolean mob_net_status, boolean gps_status) throws Exception {
+	public static String createJSON(String app_package, String version, String phoneModel, String android_version, String stackTrace, String wifi_status, String mob_net_status, boolean gps_status) throws Exception {
 		JSONObject json = new JSONObject();
 
 		JSONObject exception_json = new JSONObject();

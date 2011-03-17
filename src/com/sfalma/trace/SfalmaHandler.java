@@ -62,7 +62,6 @@ import android.net.ConnectivityManager;
 import android.location.LocationManager;
 import android.location.LocationListener;
 import android.location.Location;
-import android.Manifest.permission;
 
 /**
  * Usage:
@@ -515,26 +514,33 @@ public class SfalmaHandler {
 		}
 	}
 
-	private static boolean CheckNetworkConnection(String typeOfConnection, final Context context) {
-		boolean connected = false;
+	private static String CheckNetworkConnection(String typeOfConnection, final Context context) {
+		String connected = "false";
 
-		//if (android.Manifest.permission.ACCESS_NETWORK_STATE ==
+		PackageManager packageManager = context.getPackageManager();
 
-		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-		for (NetworkInfo ni : netInfo) {
-			if (ni.getTypeName().equalsIgnoreCase(typeOfConnection))
-				if (ni.isConnected())
-					connected = true;
+		if (packageManager.checkPermission("android.permission.ACCESS_NETWORK_STATE", G.APP_PACKAGE) == PackageManager.PERMISSION_GRANTED){
+			ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+			for (NetworkInfo ni : netInfo) {
+				if (ni.getTypeName().equalsIgnoreCase(typeOfConnection))
+					if (ni.isConnected())
+						connected = "true";
+			}
+
 		}
+		else {
+			connected = "not available [permissions]";
+		}
+
 		return connected;
 	}
 
-	private static boolean isWifiOn(final Context context) {
+	private static String isWifiOn(final Context context) {
 		return CheckNetworkConnection("WIFI", context);
 	}
 
-	private static boolean isMobileNetworkOn(final Context context) {
+	private static String isMobileNetworkOn(final Context context) {
 		return CheckNetworkConnection("MOBILE", context);
 	}
 
