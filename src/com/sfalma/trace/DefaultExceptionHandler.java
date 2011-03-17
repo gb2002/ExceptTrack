@@ -39,6 +39,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Random;
+import java.util.Date;
 
 import android.util.Log;
 
@@ -67,6 +68,9 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
 			Log.d(G.TAG, "Writing unhandled exception to: " + G.FILES_PATH+"/"+filename+".stacktrace");
 			// Write the stacktrace to disk
 			BufferedWriter bos = new BufferedWriter(new FileWriter(G.FILES_PATH+"/"+filename+".stacktrace"));
+
+			Date now = new Date();
+			bos.write(now + "\n");
 			bos.write(G.ANDROID_VERSION + "\n");
 			bos.write(G.PHONE_MODEL + "\n");
 			bos.write(result.toString());

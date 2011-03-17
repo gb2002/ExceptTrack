@@ -31,6 +31,8 @@ package com.sfalma.trace;
 import java.io.IOException;
 import java.security.*;
 import java.math.*;
+import java.io.BufferedReader;
+import java.io.StringReader;
  
 import org.apache.http.NameValuePair;
 
@@ -43,20 +45,21 @@ public class Sfalma {
 	public static String createJSON(String app_package, String version, String phoneModel, String android_version, String stackTrace, boolean wifi_status, boolean mob_net_status, boolean gps_status) throws Exception {
 		JSONObject json = new JSONObject();
 
-		JSONObject request_json = new JSONObject();
 		JSONObject exception_json = new JSONObject();
 		JSONObject application_json = new JSONObject();
 		JSONObject client_json = new JSONObject();
 		
-		request_json.put("remote_ip", "192.168.0.1");
-		json.put("request", request_json);
+		// stackTrace contains many info we need to extract
+		BufferedReader reader = new BufferedReader(new StringReader(stackTrace));
 
-		exception_json.put("occured_at", "today");
-		exception_json.put("message", "java.lang.NullPointerException");
-		exception_json.put("exception_class", "java.lang.NullPointerException");
+		exception_json.put("occured_at", reader.readLine()); // get date
+		exception_json.put("message", "java.lang.NullPointerException"); //get message
+		exception_json.put("exception_class", "java.lang.NullPointerException"); // get exception class
 		exception_json.put("backtrace", stackTrace);
 		json.put("exception", exception_json);
 		
+		reader.close();
+
 		application_json.put("phone_model", phoneModel);
 		application_json.put("package_version", version);
 		application_json.put("package_name", app_package);
@@ -66,7 +69,7 @@ public class Sfalma {
 		application_json.put("gps_on", gps_status);
 		json.put("application_environment", application_json);
 
-		client_json.put("version", "sfalma-version-1");
+		client_json.put("version", "sfalma-version-0.6");
 		client_json.put("name", "sfalma-android");
 		json.put("client", client_json);
 

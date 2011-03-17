@@ -1,4 +1,4 @@
-package com.nullwire.trace.example;
+package com.sfalma.trace.example;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -7,11 +7,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.nullwire.trace.ExceptionHandler;
+import com.sfalma.trace.SfalmaHandler;
 
 public class MainActivity extends Activity {
 
 	private static final int DIALOG_SUBMITTING_EXCEPTIONS = 1;
+	private static final String SFALMA_KEY = "e402bf37b34ec5d42c955f1e85004d12";
 
 	private Dialog mExceptionSubmitDialog;
 
@@ -20,6 +21,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+		SfalmaHandler.setup(this, SFALMA_KEY);
+		/*
         ExceptionHandler.setMinDelay(4000);
         ExceptionHandler.setHttpTimeout(10000);
         ExceptionHandler.setup(this, new ExceptionHandler.Processor() {
@@ -37,7 +40,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void handlerInstalled() {}
 		});
-
+		*/
     	findViewById(R.id.crash_button).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -48,7 +51,7 @@ public class MainActivity extends Activity {
 
     @Override
 	protected void onDestroy() {
-		ExceptionHandler.notifyContextGone();
+		//ExceptionHandler.notifyContextGone();
 		super.onDestroy();
 	}
 
