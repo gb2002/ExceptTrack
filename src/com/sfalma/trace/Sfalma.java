@@ -88,4 +88,13 @@ public class Sfalma {
 		return new BigInteger(1, m.digest()).toString(16);
 	}
 
+	// FIXME: This need some optimizing
+	public static String removeFirstLine(String in) {
+		String out = "";
+		int endOfFirstLine = in.indexOf("\n");
+		if (endOfFirstLine != -1 && endOfFirstLine+1 < in.length() ) {
+			out = in.substring(endOfFirstLine + 1);
+		}
+		return out;
+	}
 }

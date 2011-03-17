@@ -490,7 +490,7 @@ public class SfalmaHandler {
 
 				List <NameValuePair> nvps = new ArrayList <NameValuePair>();
 				nvps.add(new BasicNameValuePair("data", Sfalma.createJSON(G.APP_PACKAGE, version, phoneModel, androidVersion, stacktrace, isWifiOn(context), isMobileNetworkOn(context), isGPSOn(context))));
-				nvps.add(new BasicNameValuePair("hash", Sfalma.MD5(stacktrace)));
+				nvps.add(new BasicNameValuePair("hash", Sfalma.MD5(Sfalma.removeFirstLine(stacktrace))));
 
 				httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 				// We don't care about the response, so we just hope it
