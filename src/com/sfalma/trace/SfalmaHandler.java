@@ -518,7 +518,6 @@ public class SfalmaHandler {
 		String connected = "false";
 
 		PackageManager packageManager = context.getPackageManager();
-
 		if (packageManager.checkPermission("android.permission.ACCESS_NETWORK_STATE", G.APP_PACKAGE) == PackageManager.PERMISSION_GRANTED){
 			ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo[] netInfo = cm.getAllNetworkInfo();
@@ -544,14 +543,20 @@ public class SfalmaHandler {
 		return CheckNetworkConnection("MOBILE", context);
 	}
 
-	private static boolean isGPSOn(final Context context) {
-		boolean gps_status = true;
+	private static String isGPSOn(final Context context) {
+		String gps_status = "true";
 
-		LocationManager locManager;
-		locManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);  
-		if (!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){  
-			gps_status = false;
-		}  
+		PackageManager packageManager = context.getPackageManager();
+		if (packageManager.checkPermission("android.permission.ACCESS_FINE_LOCATION", G.APP_PACKAGE) == PackageManager.PERMISSION_GRANTED){
+			LocationManager locManager;
+			locManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);  
+			if (!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){  
+				gps_status = "false";
+			}  
+		}
+		else {
+			gps_status = "not available [permissions]";
+		}
 
 		return gps_status;
 	}
