@@ -45,10 +45,14 @@ public class Sfalma {
 	public static String createJSON(String app_package, String version, String phoneModel, String android_version, String stackTrace, String wifi_status, String mob_net_status, String gps_status) throws Exception {
 		JSONObject json = new JSONObject();
 
+		JSONObject request_json = new JSONObject();
 		JSONObject exception_json = new JSONObject();
 		JSONObject application_json = new JSONObject();
 		JSONObject client_json = new JSONObject();
 		
+		request_json.put("remote_ip", " "); 
+		json.put("request", request_json);
+
 		// stackTrace contains many info we need to extract
 		BufferedReader reader = new BufferedReader(new StringReader(stackTrace));
 
