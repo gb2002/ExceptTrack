@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Please let me crush!</string>
-    <string name="app_name">Sfalma Example App</string>
+    <string name="hello">Please crush!</string>
+    <string name="app_name">Sfalma Example</string>
 </resources>

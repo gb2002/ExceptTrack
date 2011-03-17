@@ -53,8 +53,8 @@ public class Sfalma {
 		BufferedReader reader = new BufferedReader(new StringReader(stackTrace));
 
 		exception_json.put("occured_at", reader.readLine()); // get date
-		exception_json.put("message", "java.lang.NullPointerException"); //get message
-		exception_json.put("exception_class", "java.lang.NullPointerException"); // get exception class
+		exception_json.put("message", reader.readLine()); //get message
+		exception_json.put("exception_class", reader.readLine()); // get exception class
 		exception_json.put("backtrace", stackTrace);
 		json.put("exception", exception_json);
 		
