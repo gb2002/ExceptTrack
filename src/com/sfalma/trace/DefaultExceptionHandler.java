@@ -70,9 +70,9 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
 			BufferedWriter bos = new BufferedWriter(new FileWriter(G.FILES_PATH+"/"+filename+".stacktrace"));
 
 			Date now = new Date();
-			bos.write(now + "\n");
 			bos.write(G.ANDROID_VERSION + "\n");
 			bos.write(G.PHONE_MODEL + "\n");
+			bos.write(now + "\n");
 			bos.write(result.toString());
 			bos.flush();
 			// Close up everything
