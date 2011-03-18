@@ -55,32 +55,43 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
 
 	// Default exception handler
 	public void uncaughtException(Thread t, Throwable e) {
-		// Here you should have a more robust, permanent record of problems
+		Date now = new Date();
+		int sTimeout = 0;
 		final Writer result = new StringWriter();
 		final PrintWriter printWriter = new PrintWriter(result);
-		e.printStackTrace(printWriter);
-		try {
-			// Random number to avoid duplicate files
-			Random generator = new Random();
-			int random = generator.nextInt(99999);
-			// Embed version in stacktrace filename
-			String filename = G.APP_VERSION+"-"+Integer.toString(random);
-			Log.d(G.TAG, "Writing unhandled exception to: " + G.FILES_PATH+"/"+filename+".stacktrace");
-			// Write the stacktrace to disk
-			BufferedWriter bos = new BufferedWriter(new FileWriter(G.FILES_PATH+"/"+filename+".stacktrace"));
 
-			Date now = new Date();
-			bos.write(G.ANDROID_VERSION + "\n");
-			bos.write(G.PHONE_MODEL + "\n");
-			bos.write(now + "\n");
-			bos.write(result.toString());
-			bos.flush();
-			// Close up everything
-			bos.close();
-		} catch (Exception ebos) {
-			// Nothing much we can do about this - the game is over
-			Log.e(G.TAG, "Error saving exception stacktrace", e);
+		e.printStackTrace(printWriter);
+
+		try {
+			Sfalma.submitError(sTimeout, now, result.toString());
+		 } catch (Exception ebos) {
+
+			// If we couldn't send the error, save it 
+			Log.e(G.TAG, "Error sending exception stacktrace", e);
+		
+			try {
+				// Random number to avoid duplicate files
+				Random generator = new Random();
+				int random = generator.nextInt(99999);
+				// Embed version in stacktrace filename
+				String filename = G.APP_VERSION+"-"+Integer.toString(random);
+				Log.d(G.TAG, "Writing unhandled exception to: " + G.FILES_PATH+"/"+filename+".stacktrace");
+				// Write the stacktrace to disk
+				BufferedWriter bos = new BufferedWriter(new FileWriter(G.FILES_PATH+"/"+filename+".stacktrace"));
+				
+				bos.write(G.ANDROID_VERSION + "\n");
+				bos.write(G.PHONE_MODEL + "\n");
+				bos.write(now + "\n");
+				bos.write(result.toString());
+				bos.flush();
+				// Close up everything
+				bos.close();
+			} catch (Exception ebos2) {
+				// Nothing much we can do about this - the game is over
+				Log.e(G.TAG, "Error saving exception stacktrace", e);
+			}
 		}
+		
 		Log.d(G.TAG, result.toString());
 		//call original handler
 		defaultExceptionHandler.uncaughtException(t, e);

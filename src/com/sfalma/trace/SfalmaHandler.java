@@ -42,16 +42,6 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.HTTP;
-
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -62,6 +52,8 @@ import android.net.ConnectivityManager;
 import android.location.LocationManager;
 import android.location.LocationListener;
 import android.location.Location;
+import android.widget.Toast;
+
 
 /**
  * Usage:
@@ -91,6 +83,7 @@ public class SfalmaHandler {
 	private static int sMinDelay = 0;
 	private static Integer sTimeout = 1;
 	private static boolean sSetupCalled = false;
+	private static Context gContext = null;
 
 	public static interface Processor {
 		boolean beginSubmit();
@@ -108,6 +101,8 @@ public class SfalmaHandler {
 	public static boolean setup(Context context, final Processor processor, String apiKey) {
 		// Make sure this is only called once.
 		G.API_KEY = apiKey;	
+
+		gContext = context;
 
 		if (sSetupCalled) {
 			// Tell the task that it now has a new context.
@@ -164,7 +159,7 @@ public class SfalmaHandler {
 		processor.handlerInstalled();
 
 		// Third, submit any traces we may have found
-		return submit(processor, context);
+		return submit(processor);
 	}
 
 	/**
@@ -204,7 +199,7 @@ public class SfalmaHandler {
 	 * might want to manually ask the traces to be submitted, for
 	 * example after asking the user's permission.
 	 */
-	public static boolean submit(final Processor processor, final Context context) {
+	public static boolean submit(final Processor processor) {
 		if (!sSetupCalled)
 			throw new RuntimeException("you need to call setup() first");
 
@@ -242,7 +237,7 @@ public class SfalmaHandler {
 
 					@Override
 					protected Object doInBackground(Object... params) {
-						submitStackTraces(tracesNowSubmitting, context);
+						submitStackTraces(tracesNowSubmitting);
 
 						long rest = sMinDelay - (System.currentTimeMillis() - mTimeStarted);
 						if (rest > 0)
@@ -273,12 +268,12 @@ public class SfalmaHandler {
 	/**
 	 * Version of submit() that doesn't take a processor.
 	 */
-	public static boolean submit(final Context context) {
+	public static boolean submit() {
 		return submit(new Processor() {
 			public boolean beginSubmit() { return true; }
 			public void submitDone() {}
 			public void handlerInstalled() {}
-			}, context);
+			});
 	}
 
 	/**
@@ -456,7 +451,7 @@ public class SfalmaHandler {
 	 * Look into the files folder to see if there are any "*.stacktrace" files.
 	 * If any are present, submit them to the trace server.
 	 */
-	private static void submitStackTraces(ArrayList<String[]> list, final Context context) {
+	private static void submitStackTraces(ArrayList<String[]> list) {
 		try {
 			if (list == null)
 				return;
@@ -468,34 +463,7 @@ public class SfalmaHandler {
 				String phoneModel = record[2];
 				String stacktrace = record[3];
 
-				Log.d(G.TAG, "Transmitting stack trace: " + stacktrace);
-				// Transmit stack trace with POST request
-				DefaultHttpClient httpClient = new DefaultHttpClient();
-				HttpParams params = httpClient.getParams();
-
-
-				// Lighty 1.4 has trouble with the expect header
-				// (http://redmine.lighttpd.net/issues/1017), and a
-				// potential workaround is only included in 1.4.21
-				// (http://www.lighttpd.net/2009/2/16/1-4-21-yes-we-can-do-another-release).
-				// : bla
-				HttpProtocolParams.setUseExpectContinue(params, false);
-				if (sTimeout != null) {
-					HttpConnectionParams.setConnectionTimeout(params, sTimeout);
-					HttpConnectionParams.setSoTimeout(params, sTimeout);
-				}
-
-				HttpPost httpPost = new HttpPost(G.URL);
-				httpPost.addHeader("X-Sfalma-Api-Key", G.API_KEY);
-
-				List <NameValuePair> nvps = new ArrayList <NameValuePair>();
-				nvps.add(new BasicNameValuePair("data", Sfalma.createJSON(G.APP_PACKAGE, version, phoneModel, androidVersion, stacktrace, isWifiOn(context), isMobileNetworkOn(context), isGPSOn(context))));
-				nvps.add(new BasicNameValuePair("hash", Sfalma.MD5(Sfalma.removeFirstLine(stacktrace))));
-
-				httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
-				// We don't care about the response, so we just hope it
-				// went well and on with it.
-				httpClient.execute(httpPost);
+				Sfalma.submitError(sTimeout, null, stacktrace);
 			}
 		} catch (Exception e) {
 			Log.e(G.TAG, "Error submitting trace", e);
@@ -514,12 +482,12 @@ public class SfalmaHandler {
 		}
 	}
 
-	private static String CheckNetworkConnection(String typeOfConnection, final Context context) {
+	private static String CheckNetworkConnection(String typeOfConnection) {
 		String connected = "false";
 
-		PackageManager packageManager = context.getPackageManager();
+		PackageManager packageManager = gContext.getPackageManager();
 		if (packageManager.checkPermission("android.permission.ACCESS_NETWORK_STATE", G.APP_PACKAGE) == PackageManager.PERMISSION_GRANTED){
-			ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+			ConnectivityManager cm = (ConnectivityManager) gContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo[] netInfo = cm.getAllNetworkInfo();
 			for (NetworkInfo ni : netInfo) {
 				if (ni.getTypeName().equalsIgnoreCase(typeOfConnection))
@@ -535,21 +503,21 @@ public class SfalmaHandler {
 		return connected;
 	}
 
-	private static String isWifiOn(final Context context) {
-		return CheckNetworkConnection("WIFI", context);
+	public static String isWifiOn() {
+		return CheckNetworkConnection("WIFI");
 	}
 
-	private static String isMobileNetworkOn(final Context context) {
-		return CheckNetworkConnection("MOBILE", context);
+	public static String isMobileNetworkOn() {
+		return CheckNetworkConnection("MOBILE");
 	}
 
-	private static String isGPSOn(final Context context) {
+	public static String isGPSOn() {
 		String gps_status = "true";
 
-		PackageManager packageManager = context.getPackageManager();
+		PackageManager packageManager = gContext.getPackageManager();
 		if (packageManager.checkPermission("android.permission.ACCESS_FINE_LOCATION", G.APP_PACKAGE) == PackageManager.PERMISSION_GRANTED){
 			LocationManager locManager;
-			locManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);  
+			locManager = (LocationManager)gContext.getSystemService(Context.LOCATION_SERVICE);  
 			if (!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){  
 				gps_status = "false";
 			}  
@@ -559,6 +527,13 @@ public class SfalmaHandler {
 		}
 
 		return gps_status;
+	}
+
+	public static void ShowToast(final String message) {
+		CharSequence text = message;
+
+		int duration = Toast.LENGTH_SHORT;
+		Toast.makeText(gContext, text, duration).show();
 	}
 
 }

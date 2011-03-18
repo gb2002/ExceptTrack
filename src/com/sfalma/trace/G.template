@@ -35,11 +35,11 @@ public class G {
 	// Since the exception handler doesn't have access to the context,
 	// or anything really, the library prepares these values for when
 	// the handler needs them.
-	public static String FILES_PATH 				= null;
+	public static String FILES_PATH 				= "null";
 	public static String APP_VERSION 				= "unknown";
 	public static String APP_PACKAGE 				= "unknown";
-	public static String URL						= "http://10.39.255.101:8080/api/errors";
-	//public static String URL						= "http://192.168.0.55:8080/api/errors";
+	//public static String URL						= "http://10.39.255.101:8080/api/errors";
+	public static String URL						= "http://dev.latest.sfalma-engine.appspot.com/api/errors";
 	public static String TAG						= "SfalmaHandler";
 	public static String ANDROID_VERSION			= null;
 	public static String PHONE_MODEL				= null;

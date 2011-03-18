@@ -4,7 +4,7 @@ Sfalma Android
 How to use it
 ------
 
-After you build the project (see Building section), copy sfalma-trace.jar into your project libraries and import it to your project:
+You build the project (see Building section), copy sfalma-trace.jar into your project libraries and import it to your project or you could copy sfalma-trace.jar :
 	
 	import com.sfalma.trace.SfalmaHandler;
 
