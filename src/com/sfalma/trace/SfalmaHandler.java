@@ -52,7 +52,6 @@ import android.net.ConnectivityManager;
 import android.location.LocationManager;
 import android.location.LocationListener;
 import android.location.Location;
-import android.widget.Toast;
 
 
 /**
@@ -99,11 +98,11 @@ public class SfalmaHandler {
 	 * @param processor
 	 */
 	public static boolean setup(Context context, final Processor processor, String apiKey) {
-		// Make sure this is only called once.
 		G.API_KEY = apiKey;	
 
 		gContext = context;
 
+		// Make sure this is only called once.
 		if (sSetupCalled) {
 			// Tell the task that it now has a new context.
 			if (sTask != null && !sTask.postProcessingDone()) {
@@ -527,13 +526,6 @@ public class SfalmaHandler {
 		}
 
 		return gps_status;
-	}
-
-	public static void ShowToast(final String message) {
-		CharSequence text = message;
-
-		int duration = Toast.LENGTH_SHORT;
-		Toast.makeText(gContext, text, duration).show();
 	}
 
 }

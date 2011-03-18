@@ -124,10 +124,6 @@ public class Sfalma {
 
 		try {
 			Log.d(G.TAG, "Transmitting stack trace: " + stacktrace);
-			if (occuredAt != null)
-				SfalmaHandler.ShowToast("Sending old crashes");
-			else
-				SfalmaHandler.ShowToast("Helping the app becoming better!");
 
 			DefaultHttpClient httpClient = new DefaultHttpClient();
 			HttpParams params = httpClient.getParams();

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Crush the app, reopen it and check your dashboard.</string>
+    <string name="info">Crush this app and data will be sent to your Sfalma.com dashboard.</string>
+    <string name="legal">Sfalma.com 2011</string>
     <string name="app_name">Sfalma Example</string>
 </resources>
