@@ -121,9 +121,8 @@ public class Sfalma {
 
 	public static void submitError(int sTimeout, Date occuredAt, final String stacktrace) throws Exception {
 		// Transmit stack trace with POST request
-
 		try {
-			Log.d(G.TAG, "Transmitting stack trace: " + stacktrace);
+			Log.d(G.TAG, "Transmitting stack trace: " + stacktrace);									
 
 			DefaultHttpClient httpClient = new DefaultHttpClient();
 			HttpParams params = httpClient.getParams();
