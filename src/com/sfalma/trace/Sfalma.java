@@ -78,17 +78,17 @@ public class Sfalma {
 		exception_json.put("message", reader.readLine()); //get message
 
 		String exception_class = reader.readLine();
-		exception_json.put("exception_class", exception_class.substring(exception_class.lastIndexOf("(") + 1, exception_class.lastIndexOf(")")));  // where
+		exception_json.put("where", exception_class.substring(exception_class.lastIndexOf("(") + 1, exception_class.lastIndexOf(")")));  
 
 		exception_json.put("backtrace", stackTrace);
 		json.put("exception", exception_json);
 		
 		reader.close();
 
-		application_json.put("phone_model", phoneModel);
-		application_json.put("package_version", version);
-		application_json.put("package_name", app_package);
-		application_json.put("version", android_version); //os_ver
+		application_json.put("phone", phoneModel);
+		application_json.put("appver", version);
+		application_json.put("appname", app_package);
+		application_json.put("osver", android_version); //os_ver
 		application_json.put("wifi_on", wifi_status);
 		application_json.put("mobile_net_on", mob_net_status);
 		application_json.put("gps_on", gps_status);
