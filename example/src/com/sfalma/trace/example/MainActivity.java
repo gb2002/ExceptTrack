@@ -44,6 +44,7 @@ public class MainActivity extends Activity {
     	findViewById(R.id.crash_button).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				int ar = 1/0;
 				throw new RuntimeException("exception requested by user");
 			}
 		});

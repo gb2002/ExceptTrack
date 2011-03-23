@@ -53,7 +53,6 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-
 public class Sfalma {
 
 	// FIXME: Use Gson
@@ -80,7 +79,9 @@ public class Sfalma {
 		String exception_class = reader.readLine();
 		exception_json.put("where", exception_class.substring(exception_class.lastIndexOf("(") + 1, exception_class.lastIndexOf(")")));  
 
+		exception_json.put("klass", getClass(stackTrace));
 		exception_json.put("backtrace", stackTrace);
+
 		json.put("exception", exception_json);
 		
 		reader.close();
@@ -110,7 +111,7 @@ public class Sfalma {
 	}
 
 	// FIXME: This need some optimizing
-	public static String removeFirstLine(String in) {
+	public static String getClass(String in) {
 		String out = "";
 		int endOfFirstLine = in.indexOf("\n");
 		if (endOfFirstLine != -1 && endOfFirstLine+1 < in.length() ) {
@@ -142,7 +143,7 @@ public class Sfalma {
 		
 			List <NameValuePair> nvps = new ArrayList <NameValuePair>();
 			nvps.add(new BasicNameValuePair("data", createJSON(G.APP_PACKAGE, G.APP_VERSION, G.PHONE_MODEL, G.ANDROID_VERSION, stacktrace, SfalmaHandler.isWifiOn(), SfalmaHandler.isMobileNetworkOn(), SfalmaHandler.isGPSOn(), occuredAt)));
-			nvps.add(new BasicNameValuePair("hash", MD5(removeFirstLine(stacktrace))));
+			nvps.add(new BasicNameValuePair("hash", MD5(stacktrace)));
 		
 			httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 			// We don't care about the response, so we just hope it
