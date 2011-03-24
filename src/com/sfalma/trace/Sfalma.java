@@ -154,7 +154,7 @@ public class Sfalma {
 
 			HttpResponse response = httpClient.execute(httpPost);
 			HttpEntity entity = response.getEntity();
-			
+
 			// maybe no internet? 
 			// save to send another day
 			if (entity == null) {
