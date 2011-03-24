@@ -117,7 +117,7 @@ public class Sfalma {
 		String out = "";
 		int endOfFirstLine = in.indexOf(":");
 		if (endOfFirstLine != -1 && endOfFirstLine+1 < in.length() ) {
-			out = in.substring(endOfFirstLine + 1);
+			out = in.substring(0, endOfFirstLine + 1);
 		}
 		return out;
 	}
