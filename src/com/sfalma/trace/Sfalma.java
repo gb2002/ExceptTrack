@@ -64,7 +64,7 @@ public class Sfalma {
 		JSONObject application_json = new JSONObject();
 		JSONObject client_json = new JSONObject();
 		
-		request_json.put("remote_ip", " "); 
+		request_json.put("remote_ip", ""); 
 		json.put("request", request_json);
 
 		// stackTrace contains many info we need to extract
@@ -78,6 +78,8 @@ public class Sfalma {
 
 		String exception_class = reader.readLine();
 		exception_json.put("where", exception_class.substring(exception_class.lastIndexOf("(") + 1, exception_class.lastIndexOf(")")));  
+
+		Log.d(G.TAG, "klass: " + getClass(stackTrace));									
 
 		exception_json.put("klass", getClass(stackTrace));
 		exception_json.put("backtrace", stackTrace);
@@ -113,7 +115,7 @@ public class Sfalma {
 	// FIXME: This need some optimizing
 	public static String getClass(String in) {
 		String out = "";
-		int endOfFirstLine = in.indexOf("\n");
+		int endOfFirstLine = in.indexOf(":");
 		if (endOfFirstLine != -1 && endOfFirstLine+1 < in.length() ) {
 			out = in.substring(endOfFirstLine + 1);
 		}
