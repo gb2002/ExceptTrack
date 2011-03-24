@@ -12,7 +12,7 @@ import com.sfalma.trace.SfalmaHandler;
 public class MainActivity extends Activity {
 
 	private static final int DIALOG_SUBMITTING_EXCEPTIONS = 1;
-	private static final String SFALMA_KEY = "150d0057a3e3defd74e02854e29fa760";
+	private static final String SFALMA_KEY = "f7f98e94a2b2bab7d8dabb609bec69c1";
 
 	private Dialog mExceptionSubmitDialog;
 

@@ -79,8 +79,6 @@ public class Sfalma {
 		String exception_class = reader.readLine();
 		exception_json.put("where", exception_class.substring(exception_class.lastIndexOf("(") + 1, exception_class.lastIndexOf(")")));  
 
-		Log.d(G.TAG, "klass: " + getClass(stackTrace));									
-
 		exception_json.put("klass", getClass(stackTrace));
 		exception_json.put("backtrace", stackTrace);
 
