@@ -46,6 +46,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpEntity;
 import org.apache.http.protocol.HTTP;
 
 import org.json.JSONException;
@@ -146,9 +148,19 @@ public class Sfalma {
 			nvps.add(new BasicNameValuePair("hash", MD5(stacktrace)));
 		
 			httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
-			// We don't care about the response, so we just hope it
-			// went well and on with it.
-			httpClient.execute(httpPost);
+			
+			// we don't care about the actual response
+			// only if we managed to reach the server
+
+			HttpResponse response = httpClient.execute(httpPost);
+			HttpEntity entity = response.getEntity();
+			
+			// maybe no internet? 
+			// save to send another day
+			if (entity == null) {
+				throw new Exception("no internet connection maybe");
+			}
+
 		} catch (Exception e) {
 			Log.e(G.TAG, "Error sending exception stacktrace", e);
 			throw e;
