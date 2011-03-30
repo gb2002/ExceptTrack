@@ -43,6 +43,7 @@ public class G {
 	public static String TAG						= "SfalmaHandler";
 	public static String ANDROID_VERSION			= null;
 	public static String PHONE_MODEL				= null;
+	public static String PHONE_BRAND				= null;
 	public static String API_KEY					= null;
 
 	public static String TraceVersion				= "0.6.0";
