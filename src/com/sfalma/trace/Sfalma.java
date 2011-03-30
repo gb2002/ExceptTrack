@@ -145,7 +145,7 @@ public class Sfalma {
 		
 			List <NameValuePair> nvps = new ArrayList <NameValuePair>();
 			nvps.add(new BasicNameValuePair("data", createJSON(G.APP_PACKAGE, G.APP_VERSION, G.PHONE_MODEL, G.ANDROID_VERSION, stacktrace, SfalmaHandler.isWifiOn(), SfalmaHandler.isMobileNetworkOn(), SfalmaHandler.isGPSOn(), occuredAt)));
-			nvps.add(new BasicNameValuePair("hash", MD5(stacktrace)));
+			//nvps.add(new BasicNameValuePair("hash", MD5(stacktrace)));
 		
 			httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 			
