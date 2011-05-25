@@ -29,7 +29,7 @@ Evan Charlton
 Peter Hewitt
 */
 
-package com.sfalma.trace;
+package com.bugsense.trace;
 
 public class G {
 	// Since the exception handler doesn't have access to the context,
@@ -39,8 +39,8 @@ public class G {
 	public static String APP_VERSION 				= "unknown";
 	public static String APP_PACKAGE 				= "unknown";
 	//public static String URL						= "http://10.39.255.98:8080/api/errors";
-	public static String URL						= "http://sfalma-engine.appspot.com/api/errors";
-	public static String TAG						= "SfalmaHandler";
+	public static String URL						= "http://bugsense.appspot.com/api/errors";
+	public static String TAG						= "BugSenseHandler";
 	public static String ANDROID_VERSION			= null;
 	public static String PHONE_MODEL				= null;
 	public static String PHONE_BRAND				= null;
