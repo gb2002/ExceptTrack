@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2011 Sfalma.com
+Copyright (c) 2011 BugSense.com
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
@@ -26,7 +26,7 @@ Contributors:
 Jon Vlachoyiannis
  */
 
-package com.sfalma.trace;
+package com.bugsense.trace;
 
 import java.io.IOException;
 import java.security.*;
@@ -55,7 +55,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-public class Sfalma {
+public class BugSense {
 
 	// FIXME: Use Gson
 	public static String createJSON(String app_package, String version, String phoneModel, String android_version, String stackTrace, String wifi_status, String mob_net_status, String gps_status, Date occuredAt) throws Exception {
@@ -97,8 +97,8 @@ public class Sfalma {
 		application_json.put("gps_on", gps_status);
 		json.put("application_environment", application_json);
 
-		client_json.put("version", "sfalma-version-0.6");
-		client_json.put("name", "sfalma-android");
+		client_json.put("version", "bugsense-version-0.6");
+		client_json.put("name", "bugsense-android");
 		json.put("client", client_json);
 
 		return json.toString();
@@ -141,10 +141,10 @@ public class Sfalma {
 			}
 		
 			HttpPost httpPost = new HttpPost(G.URL);
-			httpPost.addHeader("X-Sfalma-Api-Key", G.API_KEY);
+			httpPost.addHeader("X-BugSense-Api-Key", G.API_KEY);
 		
 			List <NameValuePair> nvps = new ArrayList <NameValuePair>();
-			nvps.add(new BasicNameValuePair("data", createJSON(G.APP_PACKAGE, G.APP_VERSION, G.PHONE_MODEL, G.ANDROID_VERSION, stacktrace, SfalmaHandler.isWifiOn(), SfalmaHandler.isMobileNetworkOn(), SfalmaHandler.isGPSOn(), occuredAt)));
+			nvps.add(new BasicNameValuePair("data", createJSON(G.APP_PACKAGE, G.APP_VERSION, G.PHONE_MODEL, G.ANDROID_VERSION, stacktrace, BugSenseHandler.isWifiOn(), BugSenseHandler.isMobileNetworkOn(), BugSenseHandler.isGPSOn(), occuredAt)));
 			nvps.add(new BasicNameValuePair("hash", MD5(stacktrace)));
 		
 			httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));

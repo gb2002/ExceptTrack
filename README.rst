@@ -1,27 +1,27 @@
-Sfalma Android
+BugSense Android
 ==========================
 
 How to use it
 ------
 
-You build the project (see Building section), copy sfalma-trace.jar into your project libraries and import it to your project or you could copy sfalma-trace.jar :
+You build the project (see Building section), copy bugsense-trace.jar into your project libraries and import it to your project or you could copy bugsense-trace.jar :
 	
-	import com.sfalma.trace.SfalmaHandler;
+	import com.bugsense.trace.BugSenseHandler;
 
-then just add the SfalmaHandler after setContentView and you are ready to go.
+then just add the BugSenseHandler after setContentView and you are ready to go.
 
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        SfalmaHandler.setup(this);
+        BugSenseHandler.setup(this);
 
         buildUserInterface();
     }
 
 
-This is straightforward: The setup() call install Sfalma exception handler 
+This is straightforward: The setup() call install BugSense exception handler 
 and submit any existing traces from earlier crashes.
 
 Custom processor

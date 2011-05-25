@@ -1,1 +1,1 @@
-../../android-sdk/tools/adb install -r bin/SfalmaExample-debug.apk
+../../android-sdk/tools/adb install -r bin/BugSenseExample-debug.apk

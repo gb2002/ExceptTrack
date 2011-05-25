@@ -27,10 +27,10 @@ Mads Kristiansen, mads.kristiansen@nullwire.com
 Glen Humphrey
 Evan Charlton
 Peter Hewitt
-Jon Vlachoyiannis, jon@sfalma.com
+Jon Vlachoyiannis, jon@bugsense.com
  */
 
-package com.sfalma.trace;
+package com.bugsense.trace;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -63,7 +63,7 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
 		e.printStackTrace(printWriter);
 
 		try {
-			Sfalma.submitError(sTimeout, now, result.toString());
+			BugSense.submitError(sTimeout, now, result.toString());
 		 } catch (Exception ebos) {
 
 			// If we couldn't send the error, save it 

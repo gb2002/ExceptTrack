@@ -1,1 +1,1 @@
-ant && cp sfalma-trace.jar example/libs/
+ant && cp bugsense-trace.jar example/libs/

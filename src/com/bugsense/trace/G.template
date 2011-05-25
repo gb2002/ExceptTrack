@@ -29,19 +29,22 @@ Evan Charlton
 Peter Hewitt
 */
 
-package com.nullwire.trace;
+package com.bugsense.trace;
 
 public class G {
 	// Since the exception handler doesn't have access to the context,
 	// or anything really, the library prepares these values for when
 	// the handler needs them.
-	public static String FILES_PATH 				= null;
+	public static String FILES_PATH 				= "null";
 	public static String APP_VERSION 				= "unknown";
 	public static String APP_PACKAGE 				= "unknown";
-	public static String URL						= "http://trace.nullwire.com/collect/";
-	public static String TAG						= "ExceptionHandler";
+	//public static String URL						= "http://10.39.255.98:8080/api/errors";
+	public static String URL						= "http://bugsense.appspot.com/api/errors";
+	public static String TAG						= "BugSenseHandler";
 	public static String ANDROID_VERSION			= null;
 	public static String PHONE_MODEL				= null;
+	public static String PHONE_BRAND				= null;
+	public static String API_KEY					= null;
 
-	public static String TraceVersion				= "0.3.0";
+	public static String TraceVersion				= "@__TRACEVERSION__@";
 }

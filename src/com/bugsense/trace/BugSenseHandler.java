@@ -27,10 +27,10 @@ Mads Kristiansen, mads.kristiansen@nullwire.com
 Glen Humphrey
 Evan Charlton
 Peter Hewitt
-Jon Vlachoyiannis, jon@sfalma.com
+Jon Vlachoyiannis, jon@bugsense.com
  */
 
-package com.sfalma.trace;
+package com.bugsense.trace;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -57,7 +57,7 @@ import android.location.Location;
 /**
  * Usage:
  *
- *      SfalmaHandler.setup(new SfalmaHandler.Processor() {
+ *      BugSenseHandler.setup(new BugSenseHandler.Processor() {
  *          boolean beginSubmit() {
  *          	showDialog(DIALOG_SUBMITTING_CRASH);
  *          	return true;
@@ -71,7 +71,7 @@ import android.location.Location;
  *          void handlerInstalled() {}
  *      });
  */
-public class SfalmaHandler {
+public class BugSenseHandler {
 
 	// Stores loaded stack traces in memory. Each element is
 	// a tuple of (app version, android version, phone model, actual trace).
@@ -462,7 +462,7 @@ public class SfalmaHandler {
 				String phoneModel = record[2];
 				String stacktrace = record[3];
 
-				Sfalma.submitError(sTimeout, null, stacktrace);
+				BugSense.submitError(sTimeout, null, stacktrace);
 			}
 		} catch (Exception e) {
 			Log.e(G.TAG, "Error submitting trace", e);

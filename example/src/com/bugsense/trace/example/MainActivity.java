@@ -1,4 +1,4 @@
-package com.sfalma.trace.example;
+package com.bugsense.trace.example;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -7,12 +7,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.sfalma.trace.SfalmaHandler;
+import com.bugsense.trace.BugSenseHandler;
 
 public class MainActivity extends Activity {
 
 	private static final int DIALOG_SUBMITTING_EXCEPTIONS = 1;
-	private static final String SFALMA_KEY = "4eb2a615";
+	private static final String BUGSENSE_KEY = "4eb2a615";
 
 	private Dialog mExceptionSubmitDialog;
 
@@ -21,7 +21,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-		SfalmaHandler.setup(this, SFALMA_KEY);
+		BugSenseHandler.setup(this, BUGSENSE_KEY);
 		/*
         ExceptionHandler.setMinDelay(4000);
         ExceptionHandler.setHttpTimeout(10000);

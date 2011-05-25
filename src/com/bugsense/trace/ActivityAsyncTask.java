@@ -1,4 +1,4 @@
-package com.nullwire.trace;
+package com.bugsense.trace;
 
 import android.os.AsyncTask;
 

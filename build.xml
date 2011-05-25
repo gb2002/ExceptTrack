@@ -27,7 +27,7 @@ Mads Kristiansen, mads.kristiansen@nullwire.com
 Glen Humphrey
 Evan Charlton
 Peter Hewitt
-Jon Vlachoyiannis, jon@sfalma.com
+Jon Vlachoyiannis, jon@bugsense.com
 -->
 
 <project default="package">
@@ -42,9 +42,9 @@ Jon Vlachoyiannis, jon@sfalma.com
   </path>
 
   <target name="stamp-version">
-	<delete file="src/com/sfalma/trace/G.java" quiet="true" />
-  	<copy file="src/com/sfalma/trace/G.template"
-		  tofile="src/com/sfalma/trace/G.java">
+	<delete file="src/com/bugsense/trace/G.java" quiet="true" />
+  	<copy file="src/com/bugsense/trace/G.template"
+		  tofile="src/com/bugsense/trace/G.java">
       <filterchain>
         <replacetokens>
           <token key="__TRACEVERSION__"
@@ -62,7 +62,7 @@ Jon Vlachoyiannis, jon@sfalma.com
   
   <target name="jar" depends="compile">
 
-     <delete file="sfalma-trace.jar" />
+     <delete file="bugsense-trace.jar" />
      <delete file="MANIFEST.MF" />
      <manifest file="MANIFEST.MF">
         <attribute name="Built-By" value="${user.name}" />
@@ -70,7 +70,7 @@ Jon Vlachoyiannis, jon@sfalma.com
                      value="${version.num}"/> 
     </manifest>
 
-    <jar destfile="sfalma-trace.jar"
+    <jar destfile="bugsense-trace.jar"
          basedir="build/classes"
          includes="**/*.class"
          manifest="MANIFEST.MF"
@@ -80,7 +80,7 @@ Jon Vlachoyiannis, jon@sfalma.com
   <target name="clean">
        <delete dir="build" />
        <delete>
-         <fileset dir="." includes="sfalma-trace.jar*"/>
+         <fileset dir="." includes="bugsense-trace.jar*"/>
          <fileset file="MANIFEST.MF"/>
        </delete>  
   </target>
