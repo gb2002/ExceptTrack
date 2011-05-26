@@ -1,1 +1,1 @@
-adb logcat
+../../android-sdk/platform-tools/adb logcat
