@@ -22,25 +22,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main);
 
 		BugSenseHandler.setup(this, BUGSENSE_KEY);
-		/*
-        ExceptionHandler.setMinDelay(4000);
-        ExceptionHandler.setHttpTimeout(10000);
-        ExceptionHandler.setup(this, new ExceptionHandler.Processor() {
-        	@Override
-			public boolean beginSubmit() {
-				showDialog(DIALOG_SUBMITTING_EXCEPTIONS);
-				return true;
-			}
-
-			@Override
-			public void submitDone() {
-				mExceptionSubmitDialog.cancel();
-			}
-
-			@Override
-			public void handlerInstalled() {}
-		});
-		*/
     	findViewById(R.id.crash_button).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -52,7 +33,6 @@ public class MainActivity extends Activity {
 
     @Override
 	protected void onDestroy() {
-		//ExceptionHandler.notifyContextGone();
 		super.onDestroy();
 	}
 
