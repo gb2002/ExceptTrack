@@ -50,6 +50,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
+import android.util.DisplayMetrics;
 import android.net.NetworkInfo;
 import android.net.ConnectivityManager;
 import android.location.LocationManager;
@@ -532,8 +533,9 @@ public class BugSenseHandler {
 	}
 
 	public static String[] ScreenProperties() {
-		String screen[] = {"Not available", "Not available", "Not available"};
+		String screen[] = {"Not available", "Not available", "Not available", "Not available", "Not available"};
 
+		DisplayMetrics dm = new DisplayMetrics();
 		PackageManager packageManager = gContext.getPackageManager();
 		Display display = ((WindowManager)gContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 
@@ -552,6 +554,10 @@ public class BugSenseHandler {
 		    case Surface.ROTATION_90:     rotation = "90"; break;
 		}
 		screen[2] = rotation;
+
+		display.getMetrics(dm);
+		screen[3] = Float.toString(dm.xdpi);
+		screen[4] = Float.toString(dm.ydpi);
 
 		return screen;
 	}

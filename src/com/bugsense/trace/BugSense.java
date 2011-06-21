@@ -98,6 +98,7 @@ public class BugSense {
 		application_json.put("screen:width", screenProperties[0]);
 		application_json.put("screen:height", screenProperties[1]);
 		application_json.put("screen:orientation", screenProperties[2]);
+		application_json.put("screen_dpi(x:y)", screenProperties[3] + ":"+ screenProperties[4]);
 
 		json.put("application_environment", application_json);
 
