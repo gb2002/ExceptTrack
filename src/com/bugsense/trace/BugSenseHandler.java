@@ -42,6 +42,9 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.view.WindowManager;
+import android.view.Display;
+import android.view.Surface;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -526,6 +529,31 @@ public class BugSenseHandler {
 		}
 
 		return gps_status;
+	}
+
+	public static String[] ScreenProperties() {
+		String screen[] = {"Not available", "Not available", "Not available"};
+
+		PackageManager packageManager = gContext.getPackageManager();
+		Display display = ((WindowManager)gContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+
+		int width = display.getWidth();
+		int height = display.getHeight();
+		int orientation = display.getRotation();
+
+		screen[0] = Integer.toString(width);
+		screen[1] = Integer.toString(height);
+
+		String rotation = "";
+		switch(orientation) {
+		    case Surface.ROTATION_0:      rotation = "normal"; break;
+		    case Surface.ROTATION_180:    rotation = "180"; break;
+		    case Surface.ROTATION_270:    rotation = "270"; break;
+		    case Surface.ROTATION_90:     rotation = "90"; break;
+		}
+		screen[2] = rotation;
+
+		return screen;
 	}
 
 }

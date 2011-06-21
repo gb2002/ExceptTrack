@@ -58,7 +58,7 @@ import android.util.Log;
 public class BugSense {
 
 	// FIXME: Use Gson
-	public static String createJSON(String app_package, String version, String phoneModel, String android_version, String stackTrace, String wifi_status, String mob_net_status, String gps_status, Date occuredAt) throws Exception {
+	public static String createJSON(String app_package, String version, String phoneModel, String android_version, String stackTrace, String wifi_status, String mob_net_status, String gps_status, String[] screenProperties, Date occuredAt) throws Exception {
 		JSONObject json = new JSONObject();
 
 		JSONObject request_json = new JSONObject();
@@ -95,6 +95,10 @@ public class BugSense {
 		application_json.put("wifi_on", wifi_status);
 		application_json.put("mobile_net_on", mob_net_status);
 		application_json.put("gps_on", gps_status);
+		application_json.put("screen:width", screenProperties[0]);
+		application_json.put("screen:height", screenProperties[1]);
+		application_json.put("screen:orientation", screenProperties[2]);
+
 		json.put("application_environment", application_json);
 
 		client_json.put("version", "bugsense-version-0.6");
@@ -144,7 +148,7 @@ public class BugSense {
 			httpPost.addHeader("X-BugSense-Api-Key", G.API_KEY);
 		
 			List <NameValuePair> nvps = new ArrayList <NameValuePair>();
-			nvps.add(new BasicNameValuePair("data", createJSON(G.APP_PACKAGE, G.APP_VERSION, G.PHONE_MODEL, G.ANDROID_VERSION, stacktrace, BugSenseHandler.isWifiOn(), BugSenseHandler.isMobileNetworkOn(), BugSenseHandler.isGPSOn(), occuredAt)));
+			nvps.add(new BasicNameValuePair("data", createJSON(G.APP_PACKAGE, G.APP_VERSION, G.PHONE_MODEL, G.ANDROID_VERSION, stacktrace, BugSenseHandler.isWifiOn(), BugSenseHandler.isMobileNetworkOn(), BugSenseHandler.isGPSOn(), BugSenseHandler.ScreenProperties(), occuredAt)));
 			nvps.add(new BasicNameValuePair("hash", MD5(stacktrace)));
 		
 			httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
