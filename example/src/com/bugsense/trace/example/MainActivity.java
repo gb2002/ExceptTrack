@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
 		super.onDestroy();
 	}
 
-	@Override
+	@Override 
 	protected Dialog onCreateDialog(int id) {
 		if (id == DIALOG_SUBMITTING_EXCEPTIONS) {
 			mExceptionSubmitDialog = new AlertDialog.Builder(this)

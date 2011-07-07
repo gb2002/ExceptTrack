@@ -57,7 +57,6 @@ import android.location.LocationManager;
 import android.location.LocationListener;
 import android.location.Location;
 
-
 /**
  * Usage:
  *
@@ -541,7 +540,14 @@ public class BugSenseHandler {
 
 		int width = display.getWidth();
 		int height = display.getHeight();
-		int orientation = display.getRotation();
+
+		int orientation;
+		Log.i(G.TAG, android.os.Build.VERSION.RELEASE);
+
+		//if (android.os.Build.VERSION.RELEASE.startsWith("1.5"))
+		orientation = display.getOrientation();
+			//else
+			//	orientation = display.getRotation();
 
 		screen[0] = Integer.toString(width);
 		screen[1] = Integer.toString(height);
