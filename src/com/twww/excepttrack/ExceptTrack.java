@@ -179,7 +179,6 @@ protected static class SubmitErrorTask extends AsyncTask<String, Integer, Boolea
 			try {
 				throw e;
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
