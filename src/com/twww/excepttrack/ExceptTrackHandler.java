@@ -40,8 +40,6 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
-import java.util.List;
-
 import android.view.WindowManager;
 import android.view.Display;
 import android.view.Surface;
@@ -54,13 +52,11 @@ import android.util.DisplayMetrics;
 import android.net.NetworkInfo;
 import android.net.ConnectivityManager;
 import android.location.LocationManager;
-import android.location.LocationListener;
-import android.location.Location;
 
 /**
  * Usage:
  *
- *      BugSenseHandler.setup(new BugSenseHandler.Processor() {
+ *      ExceptTrackHandler.setup(new BugSenseHandler.Processor() {
  *          boolean beginSubmit() {
  *          	showDialog(DIALOG_SUBMITTING_CRASH);
  *          	return true;
@@ -100,8 +96,8 @@ public class ExceptTrackHandler {
 	 * @param context
 	 * @param processor
 	 */
-	public static boolean setup(Context context, final Processor processor, String apiKey) {
-		G.API_KEY = apiKey;	
+	public static boolean setup(Context context, final Processor processor, String uniqueID) {
+		G.UNIQUE_ID = uniqueID;	
 
 		gContext = context;
 
@@ -172,12 +168,12 @@ public class ExceptTrackHandler {
 	 *
 	 * @param context
 	 */
-	public static boolean setup(Context context, String apiKey) {
+	public static boolean setup(Context context, String uniqueID) {
 		return setup(context, new Processor() {
 			public boolean beginSubmit() { return true; }
 			public void submitDone() {}
 			public void handlerInstalled() {}
-			}, apiKey);
+			}, uniqueID);
 	}
 
 	/**
@@ -453,6 +449,7 @@ public class ExceptTrackHandler {
 	 * Look into the files folder to see if there are any "*.stacktrace" files.
 	 * If any are present, submit them to the trace server.
 	 */
+	@SuppressWarnings("unused")
 	private static void submitStackTraces(ArrayList<String[]> list) {
 		try {
 			if (list == null)
@@ -531,6 +528,7 @@ public class ExceptTrackHandler {
 		return gps_status;
 	}
 
+	@SuppressWarnings("unused")
 	public static String[] ScreenProperties() {
 		String screen[] = {"Not available", "Not available", "Not available", "Not available", "Not available"};
 

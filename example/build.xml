@@ -1,47 +1,88 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project name="BugSenseExample" default="help">
+<!--
+Copyright (c) <year> <copyright holders>
 
-<!-- The local.properties file is created and updated by the 'android'
-     tool.
-     It contains the path to the SDK. It should *NOT* be checked into
-     Version Control Systems. -->
-    <property file="local.properties" />
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
 
-    <!-- The build.properties file can be created by you and is never touched
-         by the 'android' tool. This is the place to change some of the
-         default property values used by the Ant rules.
-         Here are some properties you may want to change/update:
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
 
-         source.dir
-             The name of the source directory. Default is 'src'.
-         out.dir
-             The name of the output directory. Default is 'bin'.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
 
-         Properties related to the SDK location or the project target should
-         be updated using the 'android' tool with the 'update' action.
+Contributors: 
+Mads Kristiansen, mads.kristiansen@nullwire.com
+Glen Humphrey
+Evan Charlton
+Peter Hewitt
+Jon Vlachoyiannis, jon@bugsense.com
+-->
+<project default="package">
+  <property file="local.properties" />
 
-         This file is an integral part of the build system for your
-         application and should be checked into Version Control Systems.
+  <property name="version.num" value="0.6.0" />
+  <property name="build.dir" value="./build"/>
+  <property name="classes.dir" 	value="${build.dir}/classes"/>
 
-         -->
-    <!-- The default.properties file is created and updated by the 'android'
-         tool, as well as ADT.
-         This file is an integral part of the build system for your
-         application and should be checked into Version Control Systems. -->
-    <property file="default.properties" />
+  <path id="classpath">
+    <fileset dir="${lib.dir}" includes="**/*.jar" />
+  </path>
 
-    <!-- Custom Android task to deal with the project target, and import the
-         proper rules.
-         This requires ant 1.6.0 or above. -->
-    <path id="android.antlibs">
-        <pathelement path="${sdk.dir}/tools/lib/anttasks.jar" />
-        <pathelement path="${sdk.dir}/tools/lib/sdklib.jar" />
-        <pathelement path="${sdk.dir}/tools/lib/androidprefs.jar" />
-    </path>
+  <target name="stamp-version">
+	<delete file="src/com/twww/excepttrack/G.java" quiet="true" />
+  	<copy file="src/com/twww/excepttrack/G.template"
+		  tofile="src/com/twww/excepttrack/G.java">
+      <filterchain>
+        <replacetokens>
+          <token key="__TRACEVERSION__"
+                 value="${version.num}" />
+        </replacetokens>
+      </filterchain>  	
+	</copy>
+  </target>
 
-    <taskdef name="setup"
-        classname="com.android.ant.SetupTask"
-        classpathref="android.antlibs" />
-    <setup />
+  <target name="compile">
+    <mkdir dir="${build.dir}" />
+    <mkdir dir="${classes.dir}" />
+    <javac srcdir="src" destdir="${classes.dir}" classpathref="classpath" />
+  </target>
+  
+  <target name="jar" depends="compile">
 
+     <delete file="ExceptTrack.jar" />
+     <delete file="MANIFEST.MF" />
+     <manifest file="MANIFEST.MF">
+        <attribute name="Built-By" value="${user.name}" />
+        <attribute name="Implementation-Version" 
+                     value="${version.num}"/> 
+    </manifest>
+
+    <jar destfile="ExceptTrack.jar"
+         basedir="build/classes"
+         includes="**/*.class"
+         manifest="MANIFEST.MF"
+         />
+  </target>
+
+  <target name="clean">
+       <delete dir="build" />
+       <delete>
+         <fileset dir="." includes="ExceptTrack.jar*"/>
+         <fileset file="MANIFEST.MF"/>
+       </delete>  
+  </target>
+  
+  <target name="package" depends="stamp-version,compile,jar" />
 </project>

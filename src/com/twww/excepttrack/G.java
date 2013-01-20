@@ -40,11 +40,12 @@ public class G {
 	public static String APP_PACKAGE 				= "unknown";
 	//public static String URL						= "http://10.39.255.98:8080/api/errors";
 	public static String URL						= "http://www.twww.com/bugsense/";
-	public static String TAG						= "BugSenseHandler";
+	public static String TAG						= "ExceptTrackHandler";
 	public static String ANDROID_VERSION			= null;
 	public static String PHONE_MODEL				= null;
 	public static String PHONE_BRAND				= null;
 	public static String API_KEY					= null;
+	public static String UNIQUE_ID					= null;
 
-	public static String TraceVersion				= "0.6.0";
+	public static String TraceVersion				= "0.7.0";
 }

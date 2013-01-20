@@ -33,7 +33,7 @@ Jon Vlachoyiannis, jon@bugsense.com
 <project default="package">
   <property file="local.properties" />
 
-  <property name="version.num" value="0.6.0" />
+  <property name="version.num" value="0.7.0" />
   <property name="build.dir" value="./build"/>
   <property name="classes.dir" 	value="${build.dir}/classes"/>
 
@@ -43,8 +43,8 @@ Jon Vlachoyiannis, jon@bugsense.com
 
   <target name="stamp-version">
 	<delete file="src/com/twww/excepttrack/G.java" quiet="true" />
-  	<copy file="src/com/twww/excepttrack/trace/G.template"
-		  tofile="src/com/twww/excepttrack/trace/G.java">
+  	<copy file="src/com/twww/excepttrack/G.template"
+		  tofile="src/com/twww/excepttrack/G.java">
       <filterchain>
         <replacetokens>
           <token key="__TRACEVERSION__"
@@ -57,12 +57,14 @@ Jon Vlachoyiannis, jon@bugsense.com
   <target name="compile">
     <mkdir dir="${build.dir}" />
     <mkdir dir="${classes.dir}" />
-    <javac srcdir="src" destdir="${classes.dir}" classpathref="classpath" />
+    <javac srcdir="src" destdir="${classes.dir}" classpathref="classpath" includeantruntime="false">
+    	<compilerarg value="-Xlint:deprecation"/>
+    </javac>
   </target>
   
   <target name="jar" depends="compile">
 
-     <delete file="ExceptTrack.jar" />
+     <delete file="excepttrack.jar" />
      <delete file="MANIFEST.MF" />
      <manifest file="MANIFEST.MF">
         <attribute name="Built-By" value="${user.name}" />
@@ -70,7 +72,7 @@ Jon Vlachoyiannis, jon@bugsense.com
                      value="${version.num}"/> 
     </manifest>
 
-    <jar destfile="ExceptTrack.jar"
+    <jar destfile="excepttrack.jar"
          basedir="build/classes"
          includes="**/*.class"
          manifest="MANIFEST.MF"
@@ -80,7 +82,7 @@ Jon Vlachoyiannis, jon@bugsense.com
   <target name="clean">
        <delete dir="build" />
        <delete>
-         <fileset dir="." includes="ExceptTrack.jar*"/>
+         <fileset dir="." includes="excepttrack.jar*"/>
          <fileset file="MANIFEST.MF"/>
        </delete>  
   </target>

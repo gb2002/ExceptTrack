@@ -36,8 +36,6 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -45,9 +43,6 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
@@ -57,7 +52,7 @@ import android.util.Log;
 public class ExceptTrack {
 
 	// FIXME: Use Gson
-	public static String createJSON(String app_package, String version, String phoneModel, String android_version, String stackTrace, String wifi_status, String mob_net_status, String gps_status, String[] screenProperties, Date occuredAt) throws Exception {
+	public static String createJSON(String app_package, String version, String phoneModel, String android_version,String uniqueID, String stackTrace, String wifi_status, String mob_net_status, String gps_status, String[] screenProperties, Date occuredAt) throws Exception {
 		JSONObject json = new JSONObject();
 
 		JSONObject request_json = new JSONObject();
@@ -86,7 +81,7 @@ public class ExceptTrack {
 		json.put("exception", exception_json);
 		
 		reader.close();
-
+		application_json.put("UniqueID", uniqueID);
 		application_json.put("phone", phoneModel);
 		application_json.put("appver", version);
 		application_json.put("appname", app_package);
@@ -101,8 +96,8 @@ public class ExceptTrack {
 
 		json.put("application_environment", application_json);
 
-		client_json.put("version", "bugsense-version-0.6");
-		client_json.put("name", "bugsense-android");
+		client_json.put("version", "ExceptTrack-0.7");
+		client_json.put("name", "ExceptTrack-Android");
 		json.put("client", client_json);
 
 		return json.toString();
@@ -140,7 +135,7 @@ protected static class SubmitErrorTask extends AsyncTask<String, Integer, Boolea
 		protected Boolean doInBackground(String...passedParams)
 		{
 			String stacktrace = passedParams[1];
-			int sTimeout = Integer.valueOf(passedParams[0]);
+			//int sTimeout = Integer.valueOf(passedParams[0]);
 			Date occuredAt = new Date(passedParams[2]);
 			
 			Log.d(G.TAG, "Transmitting stack trace: " + stacktrace);									
@@ -164,7 +159,7 @@ protected static class SubmitErrorTask extends AsyncTask<String, Integer, Boolea
 			//httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
 			
 			List <NameValuePair> nvps = new ArrayList <NameValuePair>();
-			nvps.add(new BasicNameValuePair("data", createJSON(G.APP_PACKAGE, G.APP_VERSION, G.PHONE_MODEL, G.ANDROID_VERSION, stacktrace, ExceptTrackHandler.isWifiOn(), ExceptTrackHandler.isMobileNetworkOn(), ExceptTrackHandler.isGPSOn(), ExceptTrackHandler.ScreenProperties(), occuredAt)));
+			nvps.add(new BasicNameValuePair("data", createJSON(G.APP_PACKAGE, G.APP_VERSION, G.PHONE_MODEL, G.ANDROID_VERSION, G.UNIQUE_ID, stacktrace, ExceptTrackHandler.isWifiOn(), ExceptTrackHandler.isMobileNetworkOn(), ExceptTrackHandler.isGPSOn(), ExceptTrackHandler.ScreenProperties(), occuredAt)));
 			nvps.add(new BasicNameValuePair("hash", MD5(stacktrace)));
 			
 			httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
