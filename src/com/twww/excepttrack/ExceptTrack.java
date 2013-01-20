@@ -63,7 +63,7 @@ public class ExceptTrack {
 		JSONObject application_json = new JSONObject();
 		JSONObject client_json = new JSONObject();
 		
-		request_json.put("remote_ip", ""); 
+		
 		json.put("request", request_json);
 
 		// stackTrace contains many info we need to extract
@@ -152,7 +152,8 @@ protected static class SubmitErrorTask extends AsyncTask<String, Integer, Boolea
 				e2.printStackTrace();
 			}
 			
-			Log.d(G.TAG, "Transmitting stack trace: " + stacktrace);									
+			Log.d(G.TAG, "Transmitting stack trace: " + stacktrace);	
+			Log.d(G.TAG, "Host " + G.URL);	
 			// Transmit stack trace with POST request
 			try {
 			DefaultHttpClient httpClient = new DefaultHttpClient();
