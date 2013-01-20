@@ -18,7 +18,7 @@ then just add the ExceptTrackHandler after setContentView and you are ready to g
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        ExceptTrack.setUrl(yourcollectionURL);
+		ExceptTrack.setUrl(yourcollectionURL);
 		ExceptTrack.setup(this, uniqueID);
 
 
