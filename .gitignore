@@ -1,6 +1,7 @@
 src/com/twww/excepttrack/G.java
 local.properties
 i*\.class$
+gen/*
 bin/*
 MANIFEST.MF
 .DS_Store
