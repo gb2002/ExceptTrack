@@ -1,27 +1,31 @@
-BugSense Android
+ExceptTrack
 ==========================
+This is a fork of the BugSense-Android library.
 
 How to use it
 ------
 
-You build the project (see Building section), copy bugsense-trace.jar into your project libraries and import it to your project or you could copy bugsense-trace.jar :
+You build the project (see Building section), copy ExceptTrack.jar into your project libraries and import it to your project or you could copy ExceptTrack.jar :
 	
-	import com.bugsense.trace.BugSenseHandler;
+	import com.twww.excepttrack.ExceptTrackHandler;
 
-then just add the BugSenseHandler after setContentView and you are ready to go.
+
+(yourmadeupcode is just a code that is currently in the source.  It does nothing and can be a made up string)
+
+then just add the ExceptTrackHandler after setContentView and you are ready to go.
 
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        BugSenseHandler.setup(this);
+        ExceptTrack.setup(this, yourmadeupcode);
 
         buildUserInterface();
     }
 
 
-This is straightforward: The setup() call install BugSense exception handler 
+This is straightforward: The setup() call install ExceptTrack exception handler 
 and submit any existing traces from earlier crashes.
 
 Custom processor

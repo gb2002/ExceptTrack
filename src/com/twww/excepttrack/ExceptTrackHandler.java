@@ -30,7 +30,7 @@ Peter Hewitt
 Jon Vlachoyiannis, jon@bugsense.com
  */
 
-package com.bugsense.trace;
+package com.twww.excepttrack;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -74,7 +74,7 @@ import android.location.Location;
  *          void handlerInstalled() {}
  *      });
  */
-public class BugSenseHandler {
+public class ExceptTrackHandler {
 
 	// Stores loaded stack traces in memory. Each element is
 	// a tuple of (app version, android version, phone model, actual trace).
@@ -465,7 +465,7 @@ public class BugSenseHandler {
 				String phoneModel = record[2];
 				String stacktrace = record[3];
 
-				BugSense.submitError(sTimeout, null, stacktrace);
+				ExceptTrack.submitError(sTimeout, null, stacktrace);
 			}
 		} catch (Exception e) {
 			Log.e(G.TAG, "Error submitting trace", e);

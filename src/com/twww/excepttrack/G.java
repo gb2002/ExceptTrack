@@ -29,7 +29,7 @@ Evan Charlton
 Peter Hewitt
 */
 
-package com.bugsense.trace;
+package com.twww.excepttrack;
 
 public class G {
 	// Since the exception handler doesn't have access to the context,

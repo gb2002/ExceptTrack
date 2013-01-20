@@ -30,7 +30,7 @@ Peter Hewitt
 Jon Vlachoyiannis, jon@bugsense.com
  */
 
-package com.bugsense.trace;
+package com.twww.excepttrack;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -63,7 +63,7 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
 		e.printStackTrace(printWriter);
 
 		try {
-			BugSense.submitError(sTimeout, now, result.toString());
+			ExceptTrack.submitError(sTimeout, now, result.toString());
 		 } catch (Exception ebos) {
 
 			// If we couldn't send the error, save it 

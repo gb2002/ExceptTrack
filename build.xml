@@ -42,9 +42,9 @@ Jon Vlachoyiannis, jon@bugsense.com
   </path>
 
   <target name="stamp-version">
-	<delete file="src/com/bugsense/trace/G.java" quiet="true" />
-  	<copy file="src/com/bugsense/trace/G.template"
-		  tofile="src/com/bugsense/trace/G.java">
+	<delete file="src/com/twww/excepttrack/G.java" quiet="true" />
+  	<copy file="src/com/twww/excepttrack/trace/G.template"
+		  tofile="src/com/twww/excepttrack/trace/G.java">
       <filterchain>
         <replacetokens>
           <token key="__TRACEVERSION__"
@@ -62,7 +62,7 @@ Jon Vlachoyiannis, jon@bugsense.com
   
   <target name="jar" depends="compile">
 
-     <delete file="bugsense-trace.jar" />
+     <delete file="ExceptTrack.jar" />
      <delete file="MANIFEST.MF" />
      <manifest file="MANIFEST.MF">
         <attribute name="Built-By" value="${user.name}" />
@@ -70,7 +70,7 @@ Jon Vlachoyiannis, jon@bugsense.com
                      value="${version.num}"/> 
     </manifest>
 
-    <jar destfile="bugsense-trace.jar"
+    <jar destfile="ExceptTrack.jar"
          basedir="build/classes"
          includes="**/*.class"
          manifest="MANIFEST.MF"
@@ -80,7 +80,7 @@ Jon Vlachoyiannis, jon@bugsense.com
   <target name="clean">
        <delete dir="build" />
        <delete>
-         <fileset dir="." includes="bugsense-trace.jar*"/>
+         <fileset dir="." includes="ExceptTrack.jar*"/>
          <fileset file="MANIFEST.MF"/>
        </delete>  
   </target>

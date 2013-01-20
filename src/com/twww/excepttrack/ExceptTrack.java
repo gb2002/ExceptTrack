@@ -26,7 +26,7 @@ Contributors:
 Jon Vlachoyiannis
  */
 
-package com.bugsense.trace;
+package com.twww.excepttrack;
 
 
 import java.io.BufferedReader;
@@ -54,7 +54,7 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class BugSense {
+public class ExceptTrack {
 
 	// FIXME: Use Gson
 	public static String createJSON(String app_package, String version, String phoneModel, String android_version, String stackTrace, String wifi_status, String mob_net_status, String gps_status, String[] screenProperties, Date occuredAt) throws Exception {
@@ -164,7 +164,7 @@ protected static class SubmitErrorTask extends AsyncTask<String, Integer, Boolea
 			//httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
 			
 			List <NameValuePair> nvps = new ArrayList <NameValuePair>();
-			nvps.add(new BasicNameValuePair("data", createJSON(G.APP_PACKAGE, G.APP_VERSION, G.PHONE_MODEL, G.ANDROID_VERSION, stacktrace, BugSenseHandler.isWifiOn(), BugSenseHandler.isMobileNetworkOn(), BugSenseHandler.isGPSOn(), BugSenseHandler.ScreenProperties(), occuredAt)));
+			nvps.add(new BasicNameValuePair("data", createJSON(G.APP_PACKAGE, G.APP_VERSION, G.PHONE_MODEL, G.ANDROID_VERSION, stacktrace, ExceptTrackHandler.isWifiOn(), ExceptTrackHandler.isMobileNetworkOn(), ExceptTrackHandler.isGPSOn(), ExceptTrackHandler.ScreenProperties(), occuredAt)));
 			nvps.add(new BasicNameValuePair("hash", MD5(stacktrace)));
 			
 			httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));

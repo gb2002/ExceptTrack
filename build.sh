@@ -1,1 +1,1 @@
-ant && cp bugsense-trace.jar example/libs/
+ant && cp ExceptTrack.jar example/libs/
