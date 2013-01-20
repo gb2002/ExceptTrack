@@ -10,7 +10,7 @@ You build the project (see Building section), copy ExceptTrack.jar into your pro
 	import com.twww.excepttrack.ExceptTrackHandler;
 
 
-(yourmadeupcode is just a code that is currently in the source.  It does nothing and can be a made up string)
+
 
 then just add the ExceptTrackHandler after setContentView and you are ready to go.
 
@@ -19,11 +19,13 @@ then just add the ExceptTrackHandler after setContentView and you are ready to g
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        ExceptTrack.setup(this, yourmadeupcode);
+        ExceptTrack.setup(this, uniqueID);
 
         buildUserInterface();
     }
 
+Note: uniqueID is any string. It is output with the response.  One suggested use is during testing you can insert a clientid to
+tie to a specific phone.  However this usage is not recommended during production due to privacy concerns. 
 
 This is straightforward: The setup() call install ExceptTrack exception handler 
 and submit any existing traces from earlier crashes.
