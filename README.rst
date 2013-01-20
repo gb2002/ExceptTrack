@@ -17,15 +17,19 @@ then just add the ExceptTrackHandler after setContentView and you are ready to g
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        
+        ExceptTrack.setUrl(yourcollectionURL);
+		ExceptTrack.setup(this, uniqueID);
 
-        ExceptTrack.setup(this, uniqueID);
 
         buildUserInterface();
     }
 
 Note: uniqueID is any string. It is output with the response.  One suggested use is during testing you can insert a clientid to
 tie to a specific phone.  However this usage is not recommended during production due to privacy concerns. 
+
+yourcollectionURL is the full web address to your collection script.  Be sure to include a trailing / if it is a directory 
+as it will not redirect.
 
 This is straightforward: The setup() call install ExceptTrack exception handler 
 and submit any existing traces from earlier crashes.
