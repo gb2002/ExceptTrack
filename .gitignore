@@ -1,13 +1,9 @@
-src/com/nullwire/trace/G.java
+src/com/twww/excepttrack/G.java
 local.properties
 i*\.class$
 bin/*
-trace.jar
 MANIFEST.MF
 .DS_Store
-server/site.db
-example/gen/*
-BRANCH_TODO
 build/*
 *~
 \#*
