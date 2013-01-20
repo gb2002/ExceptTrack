@@ -39,7 +39,7 @@ public class G {
 	public static String APP_VERSION 				= "unknown";
 	public static String APP_PACKAGE 				= "unknown";
 	//public static String URL						= "http://10.39.255.98:8080/api/errors";
-	public static String URL						= "http://bugsense.appspot.com/api/errors";
+	public static String URL						= "http://www.twww.com/bugsense/";
 	public static String TAG						= "BugSenseHandler";
 	public static String ANDROID_VERSION			= null;
 	public static String PHONE_MODEL				= null;

@@ -28,16 +28,18 @@ Jon Vlachoyiannis
 
 package com.bugsense.trace;
 
-import java.io.IOException;
-import java.security.*;
-import java.math.*;
+
 import java.io.BufferedReader;
 import java.io.StringReader;
-import java.lang.String; 
-import java.util.Date;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -46,13 +48,10 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpEntity;
 import org.apache.http.protocol.HTTP;
-
-import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 public class BugSense {
@@ -128,38 +127,52 @@ public class BugSense {
 	}
 
 	public static void submitError(int sTimeout, Date occuredAt, final String stacktrace) throws Exception {
-		// Transmit stack trace with POST request
-		try {
+		//Modification to run off thread
+		(new SubmitErrorTask()).execute(String.valueOf(sTimeout),stacktrace, occuredAt.toString());
+	}
+	
+
+	//Update questions
+protected static class SubmitErrorTask extends AsyncTask<String, Integer, Boolean>
+	
+	{
+		@Override
+		protected Boolean doInBackground(String...passedParams)
+		{
+			String stacktrace = passedParams[1];
+			int sTimeout = Integer.valueOf(passedParams[0]);
+			Date occuredAt = new Date(passedParams[2]);
+			
 			Log.d(G.TAG, "Transmitting stack trace: " + stacktrace);									
-
+			// Transmit stack trace with POST request
+			try {
 			DefaultHttpClient httpClient = new DefaultHttpClient();
-			HttpParams params = httpClient.getParams();
+			/*HttpParams params = httpClient.getParams();
 
-			// Lighty 1.4 has trouble with the expect header
-			// (http://redmine.lighttpd.net/issues/1017), and a
+			 //Lighty 1.4 has trouble with the expect header
+			 //(http://redmine.lighttpd.net/issues/1017), and a
 			// potential workaround is only included in 1.4.21
 			// (http://www.lighttpd.net/2009/2/16/1-4-21-yes-we-can-do-another-release).
 			HttpProtocolParams.setUseExpectContinue(params, false);
 			if (sTimeout != 0) {
 				HttpConnectionParams.setConnectionTimeout(params, sTimeout);
 				HttpConnectionParams.setSoTimeout(params, sTimeout);
-			}
+			}*/
 		
 			HttpPost httpPost = new HttpPost(G.URL);
-			httpPost.addHeader("X-BugSense-Api-Key", G.API_KEY);
-		
+			//httpPost.addHeader("X-BugSense-Api-Key", G.API_KEY);
+			//httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+			
 			List <NameValuePair> nvps = new ArrayList <NameValuePair>();
 			nvps.add(new BasicNameValuePair("data", createJSON(G.APP_PACKAGE, G.APP_VERSION, G.PHONE_MODEL, G.ANDROID_VERSION, stacktrace, BugSenseHandler.isWifiOn(), BugSenseHandler.isMobileNetworkOn(), BugSenseHandler.isGPSOn(), BugSenseHandler.ScreenProperties(), occuredAt)));
 			nvps.add(new BasicNameValuePair("hash", MD5(stacktrace)));
-		
+			
 			httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 			
-			// we don't care about the actual response
-			// only if we managed to reach the server
-
+			
 			HttpResponse response = httpClient.execute(httpPost);
 			HttpEntity entity = response.getEntity();
-
+			
 			// maybe no internet? 
 			// save to send another day
 			if (entity == null) {
@@ -168,7 +181,18 @@ public class BugSense {
 
 		} catch (Exception e) {
 			Log.e(G.TAG, "Error sending exception stacktrace", e);
-			throw e;
+			try {
+				throw e;
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
+			return null;
+		}
+		
 	}
+
+
+
 }
