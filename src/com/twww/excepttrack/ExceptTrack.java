@@ -33,9 +33,12 @@ import java.io.BufferedReader;
 import java.io.StringReader;
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -123,7 +126,11 @@ public class ExceptTrack {
 
 	public static void submitError(int sTimeout, Date occuredAt, final String stacktrace) throws Exception {
 		//Modification to run off thread
-		(new SubmitErrorTask()).execute(String.valueOf(sTimeout),stacktrace, occuredAt.toString());
+		//Convert Date to string
+		DateFormat df = DateFormat.getDateTimeInstance();
+		String occuredAtString = df.format(occuredAt);
+		
+		(new SubmitErrorTask()).execute(String.valueOf(sTimeout),stacktrace, occuredAtString);
 	}
 	
 
@@ -136,7 +143,14 @@ protected static class SubmitErrorTask extends AsyncTask<String, Integer, Boolea
 		{
 			String stacktrace = passedParams[1];
 			//int sTimeout = Integer.valueOf(passedParams[0]);
-			Date occuredAt = new Date(passedParams[2]);
+			DateFormat df = DateFormat.getDateTimeInstance();
+			Date occuredAt=null;
+			try {
+				occuredAt = df.parse(passedParams[2]);
+			} catch (ParseException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
 			
 			Log.d(G.TAG, "Transmitting stack trace: " + stacktrace);									
 			// Transmit stack trace with POST request
