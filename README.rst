@@ -1,6 +1,6 @@
 ExceptTrack
 ==========================
-This is a fork of the BugSense-Android library. (NOTE: It will not currently compile as a class)
+This is a fork of the BugSense-Android library.
 
 How to use it
 ------
