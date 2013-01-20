@@ -32,7 +32,7 @@ tie to a specific phone.  However this usage is not recommended during productio
 yourcollectionURL is the full web address to your collection script.  Be sure to include a trailing / if it is a directory 
 as it will not redirect.
 
-This is straightforward: JUst call setUrl() to setup your collection URL.  Then the setup() call installs ExceptTrack exception handler 
+This is straightforward: Just call setUrl() to setup your collection URL.  Then the setup() call installs ExceptTrack exception handler 
 and submits any existing traces from earlier crashes.
 
 Custom processor
