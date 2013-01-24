@@ -35,6 +35,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,7 +56,7 @@ import android.util.Log;
 public class ExceptTrack {
 
 	// FIXME: Use Gson
-	public static String createJSON(String app_package, String version, String phoneModel, String android_version,String uniqueID, String stackTrace, String wifi_status, String mob_net_status, String gps_status, String[] screenProperties, Date occuredAt) throws Exception {
+	public static String createJSON(String app_package, String version, String phoneModel, String android_version,String uniqueID, String stackTrace, String wifi_status, String mob_net_status, String gps_status, String[] screenProperties, String occuredAt) throws Exception {
 		JSONObject json = new JSONObject();
 
 		JSONObject request_json = new JSONObject();
@@ -84,18 +85,18 @@ public class ExceptTrack {
 		json.put("exception", exception_json);
 		
 		reader.close();
-		application_json.put("UniqueID", uniqueID);
+		application_json.put("uniqueId", uniqueID);
 		application_json.put("phone", phoneModel);
-		application_json.put("appver", version);
-		application_json.put("appname", app_package);
-		application_json.put("osver", android_version); //os_ver
+		application_json.put("appVer", version);
+		application_json.put("appName", app_package);
+		application_json.put("osVer", android_version); //os_ver
 		application_json.put("wifi_on", wifi_status);
 		application_json.put("mobile_net_on", mob_net_status);
 		application_json.put("gps_on", gps_status);
-		application_json.put("screen:width", screenProperties[0]);
-		application_json.put("screen:height", screenProperties[1]);
-		application_json.put("screen:orientation", screenProperties[2]);
-		application_json.put("screen_dpi(x:y)", screenProperties[3] + ":"+ screenProperties[4]);
+		application_json.put("screenWidth", screenProperties[0]);
+		application_json.put("screenHeight", screenProperties[1]);
+		application_json.put("screenOrientation", screenProperties[2]);
+		application_json.put("screenDpiXY", screenProperties[3] + ":"+ screenProperties[4]);
 
 		json.put("application_environment", application_json);
 
@@ -127,7 +128,7 @@ public class ExceptTrack {
 	public static void submitError(int sTimeout, Date occuredAt, final String stacktrace) throws Exception {
 		//Modification to run off thread
 		//Convert Date to string
-		DateFormat df = DateFormat.getDateTimeInstance();
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String occuredAtString = df.format(occuredAt);
 		
 		(new SubmitErrorTask()).execute(String.valueOf(sTimeout),stacktrace, occuredAtString);
@@ -143,14 +144,16 @@ protected static class SubmitErrorTask extends AsyncTask<String, Integer, Boolea
 		{
 			String stacktrace = passedParams[1];
 			//int sTimeout = Integer.valueOf(passedParams[0]);
-			DateFormat df = DateFormat.getDateTimeInstance();
-			Date occuredAt=null;
+			//DateFormat df = DateFormat.getDateTimeInstance();
+			String occuredAt = passedParams[2];
+			
+			/*Date occuredAt=null;
 			try {
 				occuredAt = df.parse(passedParams[2]);
 			} catch (ParseException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
-			}
+			}*/
 			
 			Log.d(G.TAG, "Transmitting stack trace: " + stacktrace);	
 			Log.d(G.TAG, "Host " + G.URL);	
