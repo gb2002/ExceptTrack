@@ -30,11 +30,11 @@ package com.twww.excepttrack;
 
 
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,58 +48,115 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.os.AsyncTask;
 import android.util.Log;
 
 public class ExceptTrack {
-
-	// FIXME: Use Gson
-	public static String createJSON(String app_package, String version, String phoneModel, String android_version,String uniqueID, String stackTrace, String wifi_status, String mob_net_status, String gps_status, String[] screenProperties, String occuredAt) throws Exception {
-		JSONObject json = new JSONObject();
-
-		JSONObject request_json = new JSONObject();
-		JSONObject exception_json = new JSONObject();
+	
+	/**
+	 * Build the Device properties section of the submission
+	 * 
+	 * @return JSONOBJect of phone properties
+	 */
+	public static JSONObject buildJSONDeviceProperties()
+	{
 		JSONObject application_json = new JSONObject();
-		JSONObject client_json = new JSONObject();
+		String[] screenProperties = ExceptTrackHandler.ScreenProperties();
+		
+		try {
+			application_json.put("uniqueId", G.UNIQUE_ID);
+			application_json.put("phone", G.PHONE_MODEL);
+			application_json.put("appVer", G.APP_VERSION);
+			application_json.put("appName", G.APP_PACKAGE);
+			application_json.put("osVer", G.ANDROID_VERSION); //os_ver
+			application_json.put("wifi_on", ExceptTrackHandler.isWifiOn());
+			application_json.put("mobile_net_on",ExceptTrackHandler.isMobileNetworkOn());
+			application_json.put("gps_on", ExceptTrackHandler.isGPSOn());
+			application_json.put("screenWidth", screenProperties[0]);
+			application_json.put("screenHeight", screenProperties[1]);
+			application_json.put("screenOrientation", screenProperties[2]);
+			application_json.put("screenDpiXY", screenProperties[3] + ":"+ screenProperties[4]);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		
 		
-		json.put("request", request_json);
+		return application_json;
+		
+	}
+	
+	public static JSONObject buildJSONException(String stackTrace, String occuredAt)
+	{
+		JSONObject exception_json = new JSONObject();
+		
+		
+		try {
+			// stackTrace contains many info we need to extract
+			BufferedReader reader = new BufferedReader(new StringReader(stackTrace));
+			
+			if (occuredAt == null)
+				exception_json.put("occured_at", reader.readLine()); 
+			else
+				exception_json.put("occured_at", occuredAt);
+			exception_json.put("message", reader.readLine()); //get message
 
-		// stackTrace contains many info we need to extract
-		BufferedReader reader = new BufferedReader(new StringReader(stackTrace));
+			String exception_class = reader.readLine();
+			exception_json.put("where", exception_class.substring(exception_class.lastIndexOf("(") + 1, exception_class.lastIndexOf(")")));  
+			
+			
+			exception_json.put("klass", getClass(stackTrace));
+			exception_json.put("backtrace", stackTrace);
+			reader.close();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
-		if (occuredAt == null)
-			exception_json.put("occured_at", reader.readLine()); 
+		
+		return exception_json;
+		
+	}
+	public static JSONObject buildJSONLog(String stackTrace, String occuredAt)
+	{
+		JSONObject log_json = new JSONObject();
+		
+		
+		try {
+			log_json.put("occured_at", occuredAt);
+			log_json.put("message", "N/A"); //get message
+			log_json.put("where","N/A");  
+			log_json.put("klass", "N/A");
+			log_json.put("backtrace", stackTrace);
+	
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} 
+		
+		return log_json;
+		
+	}
+	public static String createStackTraceJSON(String stackTrace, String occuredAt, boolean stacktrace) throws Exception {
+		JSONObject json = new JSONObject();
+		JSONObject application_json = buildJSONDeviceProperties();
+		JSONObject request_json = new JSONObject();
+		JSONObject exception_json=null;
+		if (stacktrace)
+		{
+			exception_json = buildJSONException(stackTrace, occuredAt);	
+		}
 		else
-			exception_json.put("occured_at", occuredAt);
-		exception_json.put("message", reader.readLine()); //get message
-
-		String exception_class = reader.readLine();
-		exception_json.put("where", exception_class.substring(exception_class.lastIndexOf("(") + 1, exception_class.lastIndexOf(")")));  
-
-		exception_json.put("klass", getClass(stackTrace));
-		exception_json.put("backtrace", stackTrace);
-
-		json.put("exception", exception_json);
+		{
+			exception_json = buildJSONLog(stackTrace, occuredAt);
+			
+		}
 		
-		reader.close();
-		application_json.put("uniqueId", uniqueID);
-		application_json.put("phone", phoneModel);
-		application_json.put("appVer", version);
-		application_json.put("appName", app_package);
-		application_json.put("osVer", android_version); //os_ver
-		application_json.put("wifi_on", wifi_status);
-		application_json.put("mobile_net_on", mob_net_status);
-		application_json.put("gps_on", gps_status);
-		application_json.put("screenWidth", screenProperties[0]);
-		application_json.put("screenHeight", screenProperties[1]);
-		application_json.put("screenOrientation", screenProperties[2]);
-		application_json.put("screenDpiXY", screenProperties[3] + ":"+ screenProperties[4]);
-
+		JSONObject client_json = new JSONObject();
+		json.put("request", request_json);
+		json.put("exception", exception_json);
 		json.put("application_environment", application_json);
-
 		client_json.put("version", "ExceptTrack-0.7");
 		client_json.put("name", "ExceptTrack-Android");
 		json.put("client", client_json);
@@ -107,7 +164,6 @@ public class ExceptTrack {
 		return json.toString();
 	}
 
-	
     public static String MD5 (String data) throws Exception {
 		MessageDigest m = MessageDigest.getInstance("MD5");
 
@@ -115,7 +171,6 @@ public class ExceptTrack {
 		return new BigInteger(1, m.digest()).toString(16);
 	}
 
-	// FIXME: This need some optimizing
 	public static String getClass(String in) {
 		String out = "";
 		int endOfFirstLine = in.indexOf(":");
@@ -124,17 +179,59 @@ public class ExceptTrack {
 		}
 		return out;
 	}
+	
+
+	public static void submitLog(Date occuredAt) throws Exception {
+		//Modification to run off thread
+		//Convert Date to string
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		String occuredAtString = df.format(occuredAt);
+		String logfile = readLog();
+		String results = createStackTraceJSON(logfile,occuredAtString,false);
+		(new SubmitErrorTask()).execute(null,results);
+	}
+	
+	
+	public static void submitMessage(Date occuredAt,String message) throws Exception {
+		//Modification to run off thread
+		//Convert Date to string
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		String occuredAtString = df.format(occuredAt);
+		String results = createStackTraceJSON(message,occuredAtString,false);
+		(new SubmitErrorTask()).execute(null,results);
+	}
+	
 
 	public static void submitError(int sTimeout, Date occuredAt, final String stacktrace) throws Exception {
 		//Modification to run off thread
 		//Convert Date to string
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String occuredAtString = df.format(occuredAt);
+		String results = createStackTraceJSON(stacktrace,occuredAtString,true);
 		
-		(new SubmitErrorTask()).execute(String.valueOf(sTimeout),stacktrace, occuredAtString);
+		(new SubmitErrorTask()).execute(String.valueOf(sTimeout),results);
 	}
 	
-
+private static String readLog()
+{
+	StringBuilder log=new StringBuilder();
+	 try {
+	      Process process = Runtime.getRuntime().exec("logcat -d");
+	      BufferedReader bufferedReader = new BufferedReader(
+	      new InputStreamReader(process.getInputStream()));
+	                       
+	      
+	      String line;
+	      while ((line = bufferedReader.readLine()) != null) {
+	        log.append(line +"\r\n");
+	      }
+	     
+	    } catch (IOException e) {
+	    }
+	
+	return log.toString();
+	
+}
 	//Update questions
 protected static class SubmitErrorTask extends AsyncTask<String, Integer, Boolean>
 	
@@ -142,20 +239,8 @@ protected static class SubmitErrorTask extends AsyncTask<String, Integer, Boolea
 		@Override
 		protected Boolean doInBackground(String...passedParams)
 		{
-			String stacktrace = passedParams[1];
-			//int sTimeout = Integer.valueOf(passedParams[0]);
-			//DateFormat df = DateFormat.getDateTimeInstance();
-			String occuredAt = passedParams[2];
 			
-			/*Date occuredAt=null;
-			try {
-				occuredAt = df.parse(passedParams[2]);
-			} catch (ParseException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}*/
-			
-			Log.d(G.TAG, "Transmitting stack trace: " + stacktrace);	
+			//Log.d(G.TAG, "Transmitting stack trace: " + stacktrace);	
 			Log.d(G.TAG, "Host " + G.URL);	
 			// Transmit stack trace with POST request
 			try {
@@ -177,8 +262,8 @@ protected static class SubmitErrorTask extends AsyncTask<String, Integer, Boolea
 			//httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
 			
 			List <NameValuePair> nvps = new ArrayList <NameValuePair>();
-			nvps.add(new BasicNameValuePair("data", createJSON(G.APP_PACKAGE, G.APP_VERSION, G.PHONE_MODEL, G.ANDROID_VERSION, G.UNIQUE_ID, stacktrace, ExceptTrackHandler.isWifiOn(), ExceptTrackHandler.isMobileNetworkOn(), ExceptTrackHandler.isGPSOn(), ExceptTrackHandler.ScreenProperties(), occuredAt)));
-			nvps.add(new BasicNameValuePair("hash", MD5(stacktrace)));
+			nvps.add(new BasicNameValuePair("data",passedParams[1]));
+			nvps.add(new BasicNameValuePair("hash", MD5(passedParams[1])));
 			
 			httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 			
