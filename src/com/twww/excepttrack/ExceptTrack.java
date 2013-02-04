@@ -223,7 +223,7 @@ private static String readLog()
 	      
 	      String line;
 	      while ((line = bufferedReader.readLine()) != null) {
-	        log.append(line +"\r\n");
+	        log.append(line +"\n");
 	      }
 	     
 	    } catch (IOException e) {
