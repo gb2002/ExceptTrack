@@ -50,6 +50,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -119,6 +120,12 @@ public class ExceptTrack {
 		return exception_json;
 		
 	}
+	/**
+	 * Helper method used build the log bundle for submitting. 
+	 * @param stackTrace
+	 * @param occuredAt
+	 * @return
+	 */
 	public static JSONObject buildJSONLog(String stackTrace, String occuredAt)
 	{
 		JSONObject log_json = new JSONObject();
@@ -138,18 +145,29 @@ public class ExceptTrack {
 		return log_json;
 		
 	}
-	public static String createStackTraceJSON(String stackTrace, String occuredAt, boolean stacktrace) throws Exception {
+	/**
+	 *
+	 * Creates a JSON formated package to send to the webserver. 
+	 * Utilizes the settings in G.template to set some of the parameters.
+	 * 
+	 * @param stackTrace
+	 * @param occurredAt
+	 * @param stacktrace
+	 * @return
+	 * @throws Exception
+	 */
+	public static String createStackTraceJSON(String stackTrace, String occurredAt, boolean stacktrace) throws Exception {
 		JSONObject json = new JSONObject();
 		JSONObject application_json = buildJSONDeviceProperties();
 		JSONObject request_json = new JSONObject();
 		JSONObject exception_json=null;
 		if (stacktrace)
 		{
-			exception_json = buildJSONException(stackTrace, occuredAt);	
+			exception_json = buildJSONException(stackTrace, occurredAt);	
 		}
 		else
 		{
-			exception_json = buildJSONLog(stackTrace, occuredAt);
+			exception_json = buildJSONLog(stackTrace, occurredAt);
 			
 		}
 		
@@ -164,6 +182,12 @@ public class ExceptTrack {
 		return json.toString();
 	}
 
+	/**
+	 * Generate MD5 hash of what is passed to it 
+	 * @param data
+	 * @return
+	 * @throws Exception
+	 */
     public static String MD5 (String data) throws Exception {
 		MessageDigest m = MessageDigest.getInstance("MD5");
 
@@ -171,6 +195,11 @@ public class ExceptTrack {
 		return new BigInteger(1, m.digest()).toString(16);
 	}
 
+    /**
+     * Utility function to parse the class out of the stack trace
+     * @param in Stacktrack string
+     * @return
+     */
 	public static String getClass(String in) {
 		String out = "";
 		int endOfFirstLine = in.indexOf(":");
@@ -232,13 +261,14 @@ public class ExceptTrack {
 	 * @throws Exception
 	 * 
 	 */
-	public static void submitLog(Date occuredAt) throws Exception {
+	@SuppressLint("SimpleDateFormat")
+	public static void submitLog(Date occurredAt) throws Exception {
 		//Modification to run off thread
 		//Convert Date to string
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		String occuredAtString = df.format(occuredAt);
+		String occurredAtString = df.format(occurredAt);
 		String logfile = readLog();
-		String results = createStackTraceJSON(logfile,occuredAtString,false);
+		String results = createStackTraceJSON(logfile,occurredAtString,false);
 		(new SubmitErrorTask()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,null,results);
 	}
 	
@@ -249,52 +279,72 @@ public class ExceptTrack {
 	 * 
 	 * @see submitMessage(String message)
 	 * @param message What you want to post to the exception tracker
-	 * @param date any date/time as Date() type;
+	 * @param occurredAt any date/time as Date() type;
 	 * @throws Exception
 	 */
-	public static void submitMessage(Date occuredAt,String message) throws Exception {
+	@SuppressLint("SimpleDateFormat")
+	public static void submitMessage(Date occurredAt,String message) throws Exception {
 		//Modification to run off thread
 		//Convert Date to string
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		String occuredAtString = df.format(occuredAt);
-		String results = createStackTraceJSON(message,occuredAtString,false);
+		String occurredAtString = df.format(occurredAt);
+		String results = createStackTraceJSON(message,occurredAtString,false);
 		(new SubmitErrorTask()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,null,results);
 	}
 	
-
-	public static void submitError(int sTimeout, Date occuredAt, final String stacktrace) throws Exception {
+	
+	/**
+	 * Builds error bundle and sends to another thread to be submitted to the web server
+	 * 
+	 * @param sTimeout (Not current used)
+	 * @param occuredAt Date/Time that event occurred at
+	 * @param stacktrace Stack trace of the error
+	 * @throws Exception Error that can be thrown by method.
+	 */
+	@SuppressLint("SimpleDateFormat")
+	public static void submitError(int sTimeout, Date occurredAt, final String stacktrace) throws Exception {
 		//Modification to run off thread
 		//Convert Date to string
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		String occuredAtString = df.format(occuredAt);
-		String results = createStackTraceJSON(stacktrace,occuredAtString,true);
+		String occurredAtString = df.format(occurredAt);
+		String results = createStackTraceJSON(stacktrace,occurredAtString,true);
 		
 		(new SubmitErrorTask()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,String.valueOf(sTimeout),results);
 	}
 	
-private static String readLog()
-{
-	StringBuilder log=new StringBuilder();
-	 try {
-	      Process process = Runtime.getRuntime().exec("logcat -d");
-	      BufferedReader bufferedReader = new BufferedReader(
-	      new InputStreamReader(process.getInputStream()));
-	                       
-	      
-	      String line;
-	      while ((line = bufferedReader.readLine()) != null) {
-	        log.append(line +"\n");
-	      }
-	     
-	    } catch (IOException e) {
-	    }
+	/**
+	 * Private method that reads the log from the device and stores it in a string
+	 * @return
+	 */
 	
-	return log.toString();
+	private static String readLog()
+	{
+		StringBuilder log=new StringBuilder();
+		 try {
+		      Process process = Runtime.getRuntime().exec("logcat -d");
+		      BufferedReader bufferedReader = new BufferedReader(
+		      new InputStreamReader(process.getInputStream()));
+		                       
+		      
+		      String line;
+		      while ((line = bufferedReader.readLine()) != null) {
+		        log.append(line +"\n");
+		      }
+		     
+		    } catch (IOException e) {
+		    }
+		
+		return log.toString();
+		
+	}
 	
-}
-	//Update questions
-protected static class SubmitErrorTask extends AsyncTask<String, Integer, Boolean>
-	
+	/**
+	 * Async Task to submit the error to the Webserver
+	 * @author George
+	 *
+	 */
+	protected static class SubmitErrorTask extends AsyncTask<String, Integer, Boolean>
+		
 	{
 		@Override
 		protected Boolean doInBackground(String...passedParams)
@@ -347,7 +397,7 @@ protected static class SubmitErrorTask extends AsyncTask<String, Integer, Boolea
 		}
 			return null;
 		}
-		
+			
 	}
 
 
