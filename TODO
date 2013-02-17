@@ -1,9 +1,4 @@
-I've had a number of cases were the stacktrace wasn't enough to track down the
-problem - a log capture would have helped. Actually querying the system log
-requires a permission and running a subprocess, which is probably not want we
-want to do.
-But we could provide a wrapper around the log class which caches the last X
-messages and can then include them in the trace.
+
 
 Currently, the exception handler is only installed after the existing traces
 have been submitted. As a result, you either have to wait for that to have
