@@ -33,7 +33,7 @@ Jon Vlachoyiannis, jon@bugsense.com
 <project default="package">
   <property file="local.properties" />
 
-  <property name="version.num" value="0.7.0" />
+  <property name="version.num" value="0.8.0" />
   <property name="build.dir" value="./build"/>
   <property name="classes.dir" 	value="${build.dir}/classes"/>
 

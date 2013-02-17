@@ -157,8 +157,8 @@ public class ExceptTrack {
 		json.put("request", request_json);
 		json.put("exception", exception_json);
 		json.put("application_environment", application_json);
-		client_json.put("version", "ExceptTrack-0.7");
-		client_json.put("name", "ExceptTrack-Android");
+		client_json.put("version", G.LIBRARY_VERSION);
+		client_json.put("name", G.LIBRARY_NAME);
 		json.put("client", client_json);
 
 		return json.toString();
@@ -180,7 +180,43 @@ public class ExceptTrack {
 		return out;
 	}
 	
-
+/**
+ * Submits  log and handles error generation and uses current date
+ * 
+ * 
+ */
+	public static void submitLog() {
+		
+		Date currentDateTime = new Date();
+		try {
+			submitLog(currentDateTime);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	/**
+	 * Submits message and handles error generation and uses current date
+	 * @param message What you want to post to the exception tracker
+	 * 
+	 */
+		public static void submitMessage(String message) {
+			
+			Date currentDateTime = new Date();
+			try {
+				submitMessage(currentDateTime,message);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+	/**
+	 * Submits log with supplied date and also throws exception if their is a problem	
+	 * @param occuredAt
+	 * @throws Exception
+	 */
 	public static void submitLog(Date occuredAt) throws Exception {
 		//Modification to run off thread
 		//Convert Date to string
@@ -188,17 +224,22 @@ public class ExceptTrack {
 		String occuredAtString = df.format(occuredAt);
 		String logfile = readLog();
 		String results = createStackTraceJSON(logfile,occuredAtString,false);
-		(new SubmitErrorTask()).execute(null,results);
+		(new SubmitErrorTask()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,null,results);
 	}
 	
 	
+	/**
+	 * Submits message with supplied date and also throws exception if their is a problem	
+	 * @param message What you want to post to the exception tracker
+	 * @throws Exception
+	 */
 	public static void submitMessage(Date occuredAt,String message) throws Exception {
 		//Modification to run off thread
 		//Convert Date to string
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String occuredAtString = df.format(occuredAt);
 		String results = createStackTraceJSON(message,occuredAtString,false);
-		(new SubmitErrorTask()).execute(null,results);
+		(new SubmitErrorTask()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,null,results);
 	}
 	
 
@@ -209,7 +250,7 @@ public class ExceptTrack {
 		String occuredAtString = df.format(occuredAt);
 		String results = createStackTraceJSON(stacktrace,occuredAtString,true);
 		
-		(new SubmitErrorTask()).execute(String.valueOf(sTimeout),results);
+		(new SubmitErrorTask()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,String.valueOf(sTimeout),results);
 	}
 	
 private static String readLog()
