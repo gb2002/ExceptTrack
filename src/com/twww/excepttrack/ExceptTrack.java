@@ -181,7 +181,8 @@ public class ExceptTrack {
 	}
 	
 /**
- * Submits  log and handles error generation and uses current date
+ * Same as submitLog(Date occuredAt) excepts handles exceptions internally
+ * @see submitLog(Date occuredAt)
  * 
  * 
  */
@@ -197,7 +198,12 @@ public class ExceptTrack {
 		
 	}
 	/**
-	 * Submits message and handles error generation and uses current date
+	 * Utilizes current date/date and doesn't require try/catch block as it doesn't throw exception.
+	 * This method allows you to post a specific message to your collection page.  It is useful for 
+	 * diagnosing problems with errors that you catch in your program but still want to see.  Since 
+	 * these caught errors will not trigger the default error handler you won't be able to see them 
+	 * unless you pass them to this method.  Currently you won't get the same breakdown as you get 
+	 * will a standard stack trace but you will get the entire stack trace sent to you. 
 	 * @param message What you want to post to the exception tracker
 	 * 
 	 */
@@ -213,9 +219,18 @@ public class ExceptTrack {
 			
 		}
 	/**
-	 * Submits log with supplied date and also throws exception if their is a problem	
+	 * NOTE: You should have the users permission for this as you will see anything written to their log.  
+	 * You should also only use it for debugging and not production as the logs can get quite noisy. 
+	 * Throws exception which should be enclosed in a try/catch statement.
+	 * In order for this method to work your app must have the permission READ_LOGS.  
+	 * What it does is submit a copy of the phone's log to your designated webpage.  
+	 * This is very useful during development for that remote device or that device that just doesn't 
+	 * want to go into debug mode (Galaxy S3 are you listening).  This will not throw an error 
+	 * if run and your program will continue. The submission will contain all the same header 
+	 * information that the standard stacktrace submission does. Currently you will get the entire log buffer which is 64KB.
 	 * @param occuredAt
 	 * @throws Exception
+	 * 
 	 */
 	public static void submitLog(Date occuredAt) throws Exception {
 		//Modification to run off thread
@@ -229,8 +244,12 @@ public class ExceptTrack {
 	
 	
 	/**
-	 * Submits message with supplied date and also throws exception if their is a problem	
+	 * 
+	 * Same as submitMessage(String message) but requires date and throws general exception
+	 * 
+	 * @see submitMessage(String message)
 	 * @param message What you want to post to the exception tracker
+	 * @param date any date/time as Date() type;
 	 * @throws Exception
 	 */
 	public static void submitMessage(Date occuredAt,String message) throws Exception {
