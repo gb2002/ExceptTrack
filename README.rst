@@ -123,6 +123,9 @@ setHttpTimeout() to change the default timeout for the HTTP submission.
 Building
 ========
 
+Note: This project is now partially Maven enabled.  The POM file should get you started.  It is
+set for Snapshot mode for now but will be changed to release in the future.
+
 Copy "local.properties.template" to "local.properties", and edit it to
 set the correct "lib.dir" path to your Android SDK platform. Then run:
 
