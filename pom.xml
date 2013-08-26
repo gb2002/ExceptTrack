@@ -1,0 +1,96 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>ExceptTrack</groupId>
+  <artifactId>ExceptTrack</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+     <dependencies>
+  <dependency>
+   <groupId>com.google.android</groupId>
+   <artifactId>android</artifactId>
+   <version>4.1.1.4</version>
+   <scope>provided</scope>
+  </dependency>
+  <dependency>
+  <groupId>com.google.android</groupId>
+  <artifactId>support-v4</artifactId>
+  <version>r7</version>
+</dependency>
+<!-- -<dependency>
+  <groupId>com.google.android.gms</groupId>
+  <artifactId>google-play-services</artifactId>
+  <version>3.1.36</version>
+  <type>apklib</type>
+</dependency>
+<dependency>
+  <groupId>com.google.android.gms</groupId>
+  <artifactId>google-play-services</artifactId>
+  <version>3.1.36</version>
+  <type>jar</type>
+</dependency>-->
+
+ </dependencies>
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <resources>
+      <resource>
+        <directory>src</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </resource>
+    </resources>
+    <plugins>
+        <plugin>
+    <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+    <artifactId>android-maven-plugin</artifactId>
+    <configuration>
+     <sdk>
+      <!-- platform or api level (api level 4 = platform 1.6) -->
+      <platform>17</platform>
+     </sdk>
+     	<proguard>
+		<skip>true</skip>
+		</proguard>
+    </configuration>
+      <version>3.6.0</version>
+     <extensions>true</extensions>
+   </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.0</version>
+        <configuration>
+          <source/>
+          <target/>
+        </configuration>
+      </plugin>
+    </plugins>
+    <pluginManagement>
+   <plugins>
+         <plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+										<artifactId>android-maven-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>generate-sources</goal>
+											</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore/>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+   </plugins>
+  </pluginManagement>
+  </build>
+</project>
